@@ -1,0 +1,83 @@
+# ============================================================
+# Unreal Engine — si applica a TUTTI i sottoprogetti
+# ============================================================
+
+**/Intermediate/
+**/Saved/
+**/Binaries/
+**/DerivedDataCache/
+**/Build/
+**/Plugins/**/Intermediate/
+**/Plugins/**/Binaries/
+**/*_BuiltData.uasset
+
+# File generati dall'engine
+**/*.sln
+**/*.suo
+**/*.opensdf
+**/*.sdf
+**/*.VC.db
+**/*.VC.opendb
+**/*.vsconfig
+**/*.xcodeproj
+**/*.xcworkspace
+
+# ============================================================
+# OS / IDE
+# ============================================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# ============================================================
+# Compilati / binari generici
+# ============================================================
+*.o
+*.obj
+*.slo
+*.lo
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.ipa
+*.lib
+*.a
+*.lai
+*.la
+*.mod
+*.gch
+*.pch
+
+# ============================================================
+# Log / temp
+# ============================================================
+*.log
+*.tmp
+*.temp   
