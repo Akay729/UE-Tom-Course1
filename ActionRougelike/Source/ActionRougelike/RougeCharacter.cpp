@@ -17,6 +17,7 @@ ARougeCharacter::ARougeCharacter()
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->TargetArmLength = 300.0f;
+	SpringArmComponent->bUsePawnControlRotation = true;
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
@@ -40,7 +41,7 @@ void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
-	//Ho dovuto includere in questa maniere il MappingContext perchè dal project setting non andava
+	//Ho dovuto includere in questa maniere, il MappingContext perchè dal project setting non andava
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = 
 		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
@@ -54,11 +55,29 @@ void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void ARougeCharacter::MoveAction(const FInputActionValue& value)
 {
 	FVector2D MoveVector = value.Get<FVector2D>();
-	AddMovementInput(GetActorForwardVector(), MoveVector.Y);
-	AddMovementInput(GetActorRightVector(), MoveVector.X);
+	
+	/*Con questo metodo i comandi sono in base la prospettiva di chi conrolla il pawn e non
+	 *in base al pawn stesso, la soluzione commentata usa GetActorForwardVector() per riferirsi al pawn    
+	 */
+	FRotator ControlRot = GetControlRotation();
+	ControlRot.Pitch = 0.0f;
+	
+	// Forward-Back
+	AddMovementInput(ControlRot.Vector(), MoveVector.X);
+	
+	// Left-Right
+	FVector RightDirection = ControlRot.RotateVector(FVector::RightVector);
+	AddMovementInput(RightDirection, MoveVector.Y);
+	
+	//AddMovementInput(GetActorForwardVector(), MoveVector.X);
+	//AddMovementInput(GetActorRightVector(), MoveVector.Y);
 }
 
-void ARougeCharacter::LookAction(const FInputActionValue& value)
+void ARougeCharacter::LookAction(const FInputActionInstance& value)
 {
+	FVector2D LookVector = value.GetValue().Get<FVector2D>();
 	
+	//Serve mettere *-1 per avere i controller 
+	AddControllerPitchInput(LookVector.Y*-1);
+	AddControllerYawInput(LookVector.X);
 }

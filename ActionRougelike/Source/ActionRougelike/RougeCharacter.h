@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "RougeCharacter.generated.h"
 
+struct FInputActionInstance;
+struct FInputActionValue;
 class UInputAction;
 class UCameraComponent;
 class USpringArmComponent;
@@ -24,7 +26,7 @@ public:
 	void MoveAction(const FInputActionValue& value);
 	
 	UFUNCTION(BlueprintCallable)
-	void LookAction(const FInputActionValue& value);
+	void LookAction(const FInputActionInstance& value);
 
 
 protected:
