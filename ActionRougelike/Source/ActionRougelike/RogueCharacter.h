@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "RougeCharacter.generated.h"
+#include "RogueCharacter.generated.h"
 
 struct FInputActionInstance;
 struct FInputActionValue;
@@ -14,13 +14,13 @@ class USpringArmComponent;
 class UInputMappingContext;
 
 UCLASS()
-class ACTIONROUGELIKE_API ARougeCharacter : public ACharacter
+class ACTIONROUGELIKE_API ARogueCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	ARougeCharacter();
+	ARogueCharacter();
 	
 	UFUNCTION(BlueprintCallable)
 	void MoveAction(const FInputActionValue& value);

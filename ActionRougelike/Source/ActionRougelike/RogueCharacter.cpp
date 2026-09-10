@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RougeCharacter.h"
+#include "RogueCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
@@ -9,7 +9,7 @@
 
 
 // Sets default values
-ARougeCharacter::ARougeCharacter()
+ARogueCharacter::ARogueCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,20 +24,20 @@ ARougeCharacter::ARougeCharacter()
 }
 
 // Called when the game starts or when spawned
-void ARougeCharacter::BeginPlay()
+void ARogueCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ARougeCharacter::Tick(float DeltaTime)
+void ARogueCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
-void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ARogueCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
@@ -48,11 +48,11 @@ void ARougeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ARougeCharacter::MoveAction);
-	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ARougeCharacter::LookAction);
+	EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ARogueCharacter::MoveAction);
+	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ARogueCharacter::LookAction);
 }
 
-void ARougeCharacter::MoveAction(const FInputActionValue& value)
+void ARogueCharacter::MoveAction(const FInputActionValue& value)
 {
 	FVector2D MoveVector = value.Get<FVector2D>();
 	
@@ -73,7 +73,7 @@ void ARougeCharacter::MoveAction(const FInputActionValue& value)
 	//AddMovementInput(GetActorRightVector(), MoveVector.Y);
 }
 
-void ARougeCharacter::LookAction(const FInputActionInstance& value)
+void ARogueCharacter::LookAction(const FInputActionInstance& value)
 {
 	FVector2D LookVector = value.GetValue().Get<FVector2D>();
 	
