@@ -11,7 +11,8 @@ class UNiagaraComponent;
 class UProjectileMovementComponent;
 class USphereComponent;
 
-UCLASS()
+//Abstract impedisce di selezionare direttamente la classe dai dropwdown dei blueprint
+UCLASS(Abstract)
 class ACTIONROUGELIKE_API ARogueProjectileMagic : public AActor
 {
 	GENERATED_BODY()
@@ -35,6 +36,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 	
+	//Effetto quando fa collisione con qualcosa
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
 	

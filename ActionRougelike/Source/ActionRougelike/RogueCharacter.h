@@ -12,6 +12,7 @@ class UInputAction;
 class UCameraComponent;
 class USpringArmComponent;
 class UInputMappingContext;
+class ARogueProjectileMagic;
 
 UCLASS()
 class ACTIONROUGELIKE_API ARogueCharacter : public ACharacter
@@ -27,9 +28,19 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void LookAction(const FInputActionInstance& value);
+	
+	UFUNCTION(BlueprintCallable)
+	void PrimaryShoot();
 
 
 protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	FName MuzzleSocketName;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	TSubclassOf<ARogueProjectileMagic> ProjectileClass;
+	
 	// Vecchia alternativa non si usa più: 
 	// UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -43,6 +54,12 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Look;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_PrimaryAttack;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Jump;
 	
 	//Ho dovuto includere in questa maniere il MappingContext perchè dal project setting non andava
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")

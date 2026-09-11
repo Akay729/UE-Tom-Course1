@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Projectile/RogueProjectileMagic.h"
 
 
 // Sets default values
@@ -21,19 +22,8 @@ ARogueCharacter::ARogueCharacter()
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
-}
 
-// Called when the game starts or when spawned
-void ARogueCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ARogueCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	MuzzleSocketName = "Muzzle_01";
 }
 
 // Called to bind functionality to input
@@ -50,6 +40,20 @@ void ARogueCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ARogueCharacter::MoveAction);
 	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ARogueCharacter::LookAction);
+	EnhancedInputComponent->BindAction(IA_PrimaryAttack, ETriggerEvent::Triggered, this, &ARogueCharacter::PrimaryShoot);
+	EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ARogueCharacter::Jump);
+}
+// Called when the game starts or when spawned
+void ARogueCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+// Called every frame
+void ARogueCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 void ARogueCharacter::MoveAction(const FInputActionValue& value)
@@ -80,4 +84,18 @@ void ARogueCharacter::LookAction(const FInputActionInstance& value)
 	//Serve mettere *-1 per avere i controller 
 	AddControllerPitchInput(LookVector.Y*-1);
 	AddControllerYawInput(LookVector.X);
+}
+
+void ARogueCharacter::PrimaryShoot()
+{
+	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
+	FRotator SpawnRotation = GetControlRotation();
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	AActor* NewActor = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	
+	MoveIgnoreActorAdd(NewActor);
 }

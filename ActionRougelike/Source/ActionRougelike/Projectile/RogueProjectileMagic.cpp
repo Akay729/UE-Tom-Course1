@@ -34,6 +34,7 @@ void ARogueProjectileMagic::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	
 	SphereComponent->OnComponentHit.AddDynamic(this, &ARogueProjectileMagic::OnActorHit);
+	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
 }
 
 void ARogueProjectileMagic::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -43,6 +44,9 @@ void ARogueProjectileMagic::OnActorHit(UPrimitiveComponent* HitComponent, AActor
 	TSubclassOf<UDamageType> DmgTypeClass = UDamageType::StaticClass();
 	UGameplayStatics::ApplyDamage(OtherActor, 10.f, GetInstigatorController(), this, DmgTypeClass);
 	
+	/* Qua si poteva usare FHitResult.HitLocation per una cordinata migliore al posto di GetActorLocation()
+	 * Dato che il primo da la cordinata della collisione ed il secondo quella del attore in question (il proittile) 
+	*/
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionEffect, GetActorLocation());
 	
 	Destroy();
