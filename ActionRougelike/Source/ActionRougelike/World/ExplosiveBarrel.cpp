@@ -3,7 +3,9 @@
 
 #include "ExplosiveBarrel.h"
 
+#include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/RadialForceComponent.h"
@@ -13,9 +15,10 @@ AExplosiveBarrel::AExplosiveBarrel()
 {
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComponent->SetSimulatePhysics(true);
+	StaticMeshComponent->SetCollisionProfileName("PhysicsActor");
 	RootComponent = StaticMeshComponent;
 	
-	bIsExploding = false;
+	bExploded = false;
 	
 	//@todo URadialForceComponent
 	
@@ -27,17 +30,8 @@ AExplosiveBarrel::AExplosiveBarrel()
 	RadialForceComponent->ForceStrength = 1000.f;
 	RadialForceComponent->Falloff = ERadialImpulseFalloff::RIF_Linear;
 	RadialForceComponent->bAutoActivate = false;
-	RadialForceComponent->bIgnoreOwningActor = true;
+	RadialForceComponent->bIgnoreOwningActor = false; //it's fly now!
 	
-	
-	
-	/*//Component per sfx esplosione
-	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
-	AudioComponent->SetupAttachment(StaticMeshComponent);
-	
-	//Component per vfx esplosione
-	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
-	NiagaraComponent->SetupAttachment(StaticMeshComponent);*/
 }
 
 /*void AExplosiveBarrel::PostInitializeComponents()
@@ -50,33 +44,37 @@ AExplosiveBarrel::AExplosiveBarrel()
 float AExplosiveBarrel::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 	class AController* EventInstigator, AActor* DamageCauser)
 {
-	if(!bIsExploding)
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	//Dato che vuole che il barile esploda ho fatto alcune modifiche
+	if(bExploded || GetWorldTimerManager().TimerExists(ExplosionTimerHandle))
 	{
-		bIsExploding = true;
-		FTimerHandle TimerHandle;
-		constexpr float ExplosionDelayTime = 3.f;
-		GetWorldTimerManager().SetTimer(TimerHandle,this, &AExplosiveBarrel::Explode,ExplosionDelayTime,false);
-		
-		FVector SocketLocation = StaticMeshComponent->GetSocketLocation(SocketName);
-		UGameplayStatics::PlaySoundAtLocation(this, ExplosionTriggerSound, SocketLocation);
-		
+		return ActualDamage;
 	}
+	//bExploded = true;
 	
-	// Questa ho dovuto guardare non 
-	UNiagaraFunctionLibrary::SpawnSystemAttached(ExplosionTriggerSystem, StaticMeshComponent, NAME_None, 
-		FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::Type::SnapToTarget, true);
+	GetWorldTimerManager().SetTimer(ExplosionTimerHandle,this, &AExplosiveBarrel::Explode,ExplosionDelayTime,false);
 	
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	ActiveBurningSoundComponent = UGameplayStatics::SpawnSoundAttached(ExplosionTriggerSound, StaticMeshComponent);
+	
+	// Questa ho dovuto guardare non sapevo
+	ActiveBurningEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(ExplosionTriggerSystem,
+		StaticMeshComponent, NAME_None,FVector::ZeroVector, FRotator::ZeroRotator,
+		EAttachLocation::Type::SnapToTarget, true);
+	
+	return ActualDamage;
 }
 
 void AExplosiveBarrel::Explode()
 {
+	ActiveBurningSoundComponent->Stop();
+	ActiveBurningEffectComponent->Deactivate();
+	
 	FVector SocketLocation = StaticMeshComponent->GetSocketLocation(SocketName);	
 	UGameplayStatics::PlaySoundAtLocation(this, ExplosionAudio, SocketLocation);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionSystem, SocketLocation);
 	RadialForceComponent->FireImpulse();
-	Destroy();
-	//@todo RadialExplosion
+	bExploded = true;
+	//Destroy();
 }
 
 

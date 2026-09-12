@@ -24,13 +24,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<URadialForceComponent> RadialForceComponent;
 	
-	/*//Component per vfx esplosione
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UNiagaraComponent> NiagaraComponent;
-	//Component per sfx esplosione
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UAudioComponent> AudioComponent;*/
+	TObjectPtr<UNiagaraComponent> ActiveBurningEffectComponent;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UAudioComponent> ActiveBurningSoundComponent;
+	
+	//Effects variable
 	UPROPERTY(EditDefaultsOnly, Category = "Explosion")
 	TObjectPtr<USoundBase> ExplosionAudio;
 	
@@ -47,7 +47,12 @@ protected:
 	TObjectPtr<UNiagaraSystem> ExplosionTriggerSystem;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Explosion")
-	bool  bIsExploding;
+	bool bExploded;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Explosion")
+	float ExplosionDelayTime = 3.f;
+	
+	FTimerHandle ExplosionTimerHandle;
 	
 public:	
 	// Sets default values for this actor's properties
