@@ -13,7 +13,7 @@
 
 ARogueProjectileMagic::ARogueProjectileMagic()
 {
-	// Creato un component per la collisione inquesto caso sui usa sphere
+	// Creato un component per la collisione in questo caso sui usa sphere
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetSphereRadius(16.f);
 	SphereComponent->SetCollisionProfileName("Projectile");
