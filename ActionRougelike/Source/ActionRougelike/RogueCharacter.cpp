@@ -6,6 +6,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "Projectile/RogueProjectileMagic.h"
 
 
@@ -88,11 +90,27 @@ void ARogueCharacter::LookAction(const FInputActionInstance& value)
 
 void ARogueCharacter::PrimaryShoot()
 {
+	PlayAnimMontage(AttackMontage);
+	
+	FTimerHandle TimerHandle;
+	constexpr float AttackDelayTime = 0.2f;
+	
+	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName, FVector::ZeroVector, 
+		FRotator::ZeroRotator,EAttachLocation::Type::SnapToTarget,true);
+	
+	UGameplayStatics::PlaySound2D(this,ChargeSoundEffect);
+	
+	GetWorldTimerManager().SetTimer(TimerHandle, this ,&ARogueCharacter::AttackTimerEnlapsed, AttackDelayTime);
+}
+
+void ARogueCharacter::AttackTimerEnlapsed()
+{
 	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
 	FRotator SpawnRotation = GetControlRotation();
 	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Instigator = this;
+	//Devo controllare meglio questa riga
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
 	AActor* NewActor = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);

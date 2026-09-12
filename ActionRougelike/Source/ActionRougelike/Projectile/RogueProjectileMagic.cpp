@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -21,6 +22,10 @@ ARogueProjectileMagic::ARogueProjectileMagic()
 	// Creato un component niagara per aggiungere un VFX al proittile
 	LoopedNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	LoopedNiagaraComponent->SetupAttachment(SphereComponent);
+	
+	// Creato un component audio per aggiungere un SFX al proittile
+	LoopedAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("LoopedAudioComponent"));
+	LoopedAudioComponent->SetupAttachment(SphereComponent);
 	
 	//Creato un component per Movement di base del proittile 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
@@ -40,15 +45,20 @@ void ARogueProjectileMagic::PostInitializeComponents()
 void ARogueProjectileMagic::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit )
 {
-	//Create our own dmg type
-	TSubclassOf<UDamageType> DmgTypeClass = UDamageType::StaticClass();
-	UGameplayStatics::ApplyDamage(OtherActor, 10.f, GetInstigatorController(), this, DmgTypeClass);
+	
+	FVector DirectionHit =  GetActorRotation().Vector();
+	
+	UGameplayStatics::ApplyPointDamage(OtherActor, 10.f, DirectionHit, Hit, GetInstigatorController(),
+		this, DmgTypeClass);
+	
+	//UGameplayStatics::ApplyDamage(OtherActor, 10.f, GetInstigatorController(), this, DmgTypeClass);
 	
 	/* Qua si poteva usare FHitResult.HitLocation per una cordinata migliore al posto di GetActorLocation()
 	 * Dato che il primo da la cordinata della collisione ed il secondo quella del attore in question (il proittile) 
 	*/
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionEffect, GetActorLocation());
 	
+	UGameplayStatics::PlaySoundAtLocation(this, HitSoundEffect, GetActorLocation(),FRotator::ZeroRotator);
 	Destroy();
 }
 

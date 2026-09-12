@@ -10,6 +10,7 @@ class UNiagaraSystem;
 class UNiagaraComponent;
 class UProjectileMovementComponent;
 class USphereComponent;
+class UAudioComponent;
 
 //Abstract impedisce di selezionare direttamente la classe dai dropwdown dei blueprint
 UCLASS(Abstract)
@@ -19,6 +20,17 @@ class ACTIONROUGELIKE_API ARogueProjectileMagic : public AActor
 
 protected:
 	
+	// Damage viene tradotto in "Danno"... Ho perso 10 min per questo
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	TSubclassOf<UDamageType> DmgTypeClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	TObjectPtr<USoundBase> HitSoundEffect;
+	
+	//Effetto quando fa collisione con qualcosa
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> ExplosionEffect;
+	
 	/*
 	 * Qui di seqguito venfo creati di puntatori a molteplici components
 	 * Sphere per la collisione
@@ -27,18 +39,17 @@ protected:
 	 * 
 	 * Tutti componenti gia pre esistenti nel engine
 	 */
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<USphereComponent> SphereComponent;
 	
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
 	
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 	
-	//Effetto quando fa collisione con qualcosa
-	UPROPERTY(EditAnywhere, Category = "Effects")
-	TObjectPtr<UNiagaraSystem> ExplosionEffect;
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UAudioComponent> LoopedAudioComponent;
 	
 	UFUNCTION()
 	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const

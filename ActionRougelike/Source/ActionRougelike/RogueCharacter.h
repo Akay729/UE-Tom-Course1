@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RogueCharacter.generated.h"
 
+class UNiagaraSystem;
 struct FInputActionInstance;
 struct FInputActionValue;
 class UInputAction;
@@ -31,7 +32,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void PrimaryShoot();
-
+	
+	void AttackTimerEnlapsed();
 
 protected:
 	
@@ -40,6 +42,15 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TSubclassOf<ARogueProjectileMagic> ProjectileClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	TObjectPtr<UAnimMontage> AttackMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	TObjectPtr<UNiagaraSystem> CastingEffect;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	TObjectPtr<USoundBase> ChargeSoundEffect;
 	
 	// Vecchia alternativa non si usa più: 
 	// UCameraComponent* CameraComponent;
