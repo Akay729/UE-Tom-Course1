@@ -11,8 +11,8 @@ Riprendere le basi di Unreal Engine C++ e costruire gradualmente un action/rouge
 
 - [x] 1. Introduction & Setup
 - [x] 2. Project Start (C++ class, ActorComponents, Input Move/Look)
-- [ ] 3. Collision & Physics — **in corso** (Input & Spawning)
-- [ ] 4. Assignment 1
+- [x] 3. Collision & Physics — (Input & Spawning)
+- [-] 4. Assignment 1 **in corso** 
 - [ ] 5. Interfaces & Collision Queries
 - [ ] 6. Blueprint Scripting
 - [ ] 7. Assignment 2
