@@ -16,6 +16,7 @@ AExplosiveBarrel::AExplosiveBarrel()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComponent->SetSimulatePhysics(true);
 	StaticMeshComponent->SetCollisionProfileName("PhysicsActor");
+	StaticMeshComponent->SetCollisionProfileName("Interaction");
 	RootComponent = StaticMeshComponent;
 	
 	bExploded = false;

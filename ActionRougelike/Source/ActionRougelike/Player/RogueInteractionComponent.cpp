@@ -3,6 +3,7 @@
 
 #include "RogueInteractionComponent.h"
 
+#include "RogueGameTypes.h"
 #include "Core/RogueInteractionInterface.h"
 #include "Engine/OverlapResult.h"
 
@@ -26,7 +27,7 @@ void URogueInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	
 	TArray<FOverlapResult> OverlapResults;
 	// raggio di azione del component interacion
-	ECollisionChannel CollisionChannel = ECollisionChannel::ECC_Visibility;
+	ECollisionChannel CollisionChannel = COLLISION_INTERACTION;
 	FCollisionShape CollisionShape;
 	CollisionShape.SetSphere(InteractionRadius);
 	
