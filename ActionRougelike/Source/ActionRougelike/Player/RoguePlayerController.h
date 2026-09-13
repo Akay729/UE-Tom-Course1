@@ -10,6 +10,7 @@
  * 
  */
 
+class UInputAction;
 class URogueInteractionComponent;
 
 UCLASS()
@@ -21,7 +22,15 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<URogueInteractionComponent> InteractionComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Interaction;
 
+	UFUNCTION()
+	void StartInteract();
+	
+	virtual void SetupInputComponent() override;
+	
 public:
 	ARoguePlayerController();
 };

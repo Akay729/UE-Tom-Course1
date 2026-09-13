@@ -3,7 +3,7 @@
 
 #include "RogueGameMode.h"
 
-#include "ActionRougelike/Player/RoguePlayerController.h"
+#include "Player/RoguePlayerController.h"
 
 ARogueGameMode::ARogueGameMode()
 {
