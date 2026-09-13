@@ -11,15 +11,27 @@ class ACTIONROUGELIKE_API ARogueItemChest : public AActor
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this actor's properties
-	ARogueItemChest();
-
 protected:
-	// Called when the game starts or when spawned
+		
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> BaseMeshComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> LidMeshComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "LidAnimation")
+	float CurrentAnimationLidPitch = 0.0f;
+	
+	UPROPERTY(EditAnywhere, Category = "LidAnimation")
+	float LidPitch = 120.f;
+	
+	UPROPERTY(EditAnywhere, Category = "LidAnimation")
+	float InterpSpeed = 50.f;
+	
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	ARogueItemChest();
 };
