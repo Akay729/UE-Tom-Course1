@@ -46,13 +46,21 @@ float AExplosiveBarrel::TakeDamage(float DamageAmount, struct FDamageEvent const
 	class AController* EventInstigator, AActor* DamageCauser)
 {
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	//Dato che vuole che il barile esploda ho fatto alcune modifiche
+	StartExplode();
+	return ActualDamage;
+}
+
+void AExplosiveBarrel::Interact()
+{
+	StartExplode();
+}
+
+void AExplosiveBarrel::StartExplode()
+{
 	if(bExploded || GetWorldTimerManager().TimerExists(ExplosionTimerHandle))
 	{
-		return ActualDamage;
+		return;
 	}
-	//bExploded = true;
-	
 	GetWorldTimerManager().SetTimer(ExplosionTimerHandle,this, &AExplosiveBarrel::Explode,ExplosionDelayTime,false);
 	
 	ActiveBurningSoundComponent = UGameplayStatics::SpawnSoundAttached(ExplosionTriggerSound, StaticMeshComponent);
@@ -61,8 +69,6 @@ float AExplosiveBarrel::TakeDamage(float DamageAmount, struct FDamageEvent const
 	ActiveBurningEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(ExplosionTriggerSystem,
 		StaticMeshComponent, NAME_None,FVector::ZeroVector, FRotator::ZeroRotator,
 		EAttachLocation::Type::SnapToTarget, true);
-	
-	return ActualDamage;
 }
 
 void AExplosiveBarrel::Explode()
@@ -77,5 +83,3 @@ void AExplosiveBarrel::Explode()
 	bExploded = true;
 	//Destroy();
 }
-
-

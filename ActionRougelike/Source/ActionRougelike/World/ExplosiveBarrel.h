@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Core/RogueInteractionInterface.h"
 #include "GameFramework/Actor.h"
 #include "ExplosiveBarrel.generated.h"
 
@@ -11,7 +12,7 @@ class UNiagaraComponent;
 class UNiagaraSystem;
 
 UCLASS()
-class ACTIONROUGELIKE_API AExplosiveBarrel : public AActor
+class ACTIONROUGELIKE_API AExplosiveBarrel : public AActor, public IRogueInteractionInterface 
 {
 	GENERATED_BODY()
 
@@ -65,4 +66,9 @@ public:
 	
 	UFUNCTION()
 	void Explode();
+	
+	virtual void Interact() override;
+	
+	UFUNCTION()
+	void StartExplode();
 };
