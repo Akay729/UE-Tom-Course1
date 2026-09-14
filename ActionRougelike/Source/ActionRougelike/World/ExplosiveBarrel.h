@@ -67,7 +67,7 @@ public:
 	UFUNCTION()
 	void Explode();
 	
-	virtual void Interact() override;
+	virtual void Interact_Implementation() override;
 	
 	UFUNCTION()
 	void StartExplode();

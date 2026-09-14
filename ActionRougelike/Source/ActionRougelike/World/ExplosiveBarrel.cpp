@@ -50,7 +50,7 @@ float AExplosiveBarrel::TakeDamage(float DamageAmount, struct FDamageEvent const
 	return ActualDamage;
 }
 
-void AExplosiveBarrel::Interact()
+void AExplosiveBarrel::Interact_Implementation()
 {
 	StartExplode();
 }

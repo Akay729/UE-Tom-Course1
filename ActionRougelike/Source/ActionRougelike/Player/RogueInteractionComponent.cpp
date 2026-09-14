@@ -34,7 +34,7 @@ void URogueInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	GetWorld()->OverlapMultiByChannel(OverlapResults, Center, FQuat::Identity, CollisionChannel, CollisionShape);
 	
 	
-	float HighestDotResult;
+	float HighestDotResult = -2.0f;
 	
 	//Identifica chi è l'actor più adeguato con il quale interagire 
 	//Note usa "&" per fare riferimento alla variabile e non copiarla!
@@ -69,8 +69,15 @@ void URogueInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 
 void URogueInteractionComponent::Interact()
 {
-	if (IRogueInteractionInterface* InteractInterface = Cast<IRogueInteractionInterface>(SelectedActor))
+	/*if (IRogueInteractionInterface* InteractInterface = Cast<IRogueInteractionInterface>(SelectedActor))
 	{
 		InteractInterface->Interact();
+	}*/
+
+	if (SelectedActor)
+	{
+	IRogueInteractionInterface::Execute_Interact(SelectedActor);
 	}
+	
+	
 }
