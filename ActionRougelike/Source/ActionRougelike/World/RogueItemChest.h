@@ -29,11 +29,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "LidAnimation")
 	float InterpSpeed = 50.f;
 
+	// Non ha bisogno di implementazione
+	UFUNCTION(BlueprintImplementableEvent)
+	void ChestAnimationComplete();
+	
 public:
 	
 	virtual void Interact() override;
 	
 	virtual void Tick(float DeltaTime) override;
+	
 	
 	ARogueItemChest();
 };
