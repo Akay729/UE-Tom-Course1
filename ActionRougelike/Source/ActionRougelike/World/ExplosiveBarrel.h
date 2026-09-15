@@ -64,7 +64,7 @@ public:
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void Explode();
 	
 	virtual void Interact_Implementation() override;

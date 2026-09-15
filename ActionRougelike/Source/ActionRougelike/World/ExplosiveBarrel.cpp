@@ -73,8 +73,21 @@ void AExplosiveBarrel::StartExplode()
 
 void AExplosiveBarrel::Explode()
 {
-	ActiveBurningSoundComponent->Stop();
-	ActiveBurningEffectComponent->Deactivate();
+	
+	//Questo è stato aggiunto perchè dai blueprint del mondo si chiama questa classe quando viene usata la leva
+	//(Anche la leva fa parte sono ed unicamentte dei blueprint) 
+	if (ActiveBurningSoundComponent)
+	{
+		ActiveBurningSoundComponent->Stop();
+	}
+	if (ActiveBurningEffectComponent)
+	{
+		ActiveBurningEffectComponent->Deactivate();
+	}
+		
+	
+	StaticMeshComponent->AddImpulse(FVector::UpVector *1000, NAME_None, true);
+	StaticMeshComponent->AddAngularImpulseInDegrees(FVector::RightVector *1000, NAME_None, true);
 	
 	FVector SocketLocation = StaticMeshComponent->GetSocketLocation(SocketName);	
 	UGameplayStatics::PlaySoundAtLocation(this, ExplosionAudio, SocketLocation);
