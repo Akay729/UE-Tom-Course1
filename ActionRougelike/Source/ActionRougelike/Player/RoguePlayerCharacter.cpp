@@ -9,6 +9,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile/RogueProjectileMagic.h"
+#include "Projectile/RogueProjectileTeleport.h"
 
 
 // Sets default values
@@ -43,6 +44,7 @@ void ARoguePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::MoveAction);
 	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::LookAction);
 	EnhancedInputComponent->BindAction(IA_PrimaryAttack, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::PrimaryShoot);
+	EnhancedInputComponent->BindAction(IA_AbilityTeleport, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::AbilityTeleport);
 	EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::Jump);
 }
 // Called when the game starts or when spawned
@@ -102,6 +104,34 @@ void ARoguePlayerCharacter::PrimaryShoot()
 	GetWorldTimerManager().SetTimer(TimerHandle, this ,&ARoguePlayerCharacter::AttackTimerEnlapsed, AttackDelayTime);
 }
 
+
+void ARoguePlayerCharacter::AbilityTeleport()
+{
+	
+	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
+	FRotator SpawnRotation = GetControlRotation();
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator = this;
+	//Devo controllare meglio questa riga
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	AActor* NewActor = GetWorld()->SpawnActor<AActor>(TeleportProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	MoveIgnoreActorAdd(NewActor);
+	/*PlayAnimMontage(AttackMontage);
+	
+	FTimerHandle TimerHandle;
+	constexpr float AttackDelayTime = 0.2f;
+	
+	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName, FVector::ZeroVector, 
+		FRotator::ZeroRotator,EAttachLocation::Type::SnapToTarget,true);
+	UGameplayStatics::PlaySound2D(this,ChargeSoundEffect);
+	
+	GetWorldTimerManager().SetTimer(TimerHandle, this ,&ARoguePlayerCharacter::AttackTimerEnlapsed, AttackDelayTime);*/
+}
+
+
+
 void ARoguePlayerCharacter::AttackTimerEnlapsed()
 {
 	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
@@ -112,7 +142,7 @@ void ARoguePlayerCharacter::AttackTimerEnlapsed()
 	//Devo controllare meglio questa riga
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
-	AActor* NewActor = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	AActor* NewActor = GetWorld()->SpawnActor<AActor>(MagicProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 	
 	MoveIgnoreActorAdd(NewActor);
 }

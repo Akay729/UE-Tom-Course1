@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RoguePlayerCharacter.generated.h"
 
+class ARogueProjectileTeleport;
 class UNiagaraSystem;
 struct FInputActionInstance;
 struct FInputActionValue;
@@ -33,6 +34,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PrimaryShoot();
 	
+	UFUNCTION(BlueprintCallable)
+	void AbilityTeleport();
+	
+	/*UFUNCTION(BlueprintCallable)
+	void AbilityBlackhole();*/
+	
 	void AttackTimerEnlapsed();
 
 protected:
@@ -41,7 +48,10 @@ protected:
 	FName MuzzleSocketName;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TSubclassOf<ARogueProjectileMagic> ProjectileClass;
+	TSubclassOf<ARogueProjectileMagic> MagicProjectileClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport Ability")
+	TSubclassOf<ARogueProjectileTeleport> TeleportProjectileClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TObjectPtr<UAnimMontage> AttackMontage;
@@ -71,6 +81,13 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Jump;
+	
+	// -- Ability --
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_AbilityTeleport;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_AbilityBlackhole;
 	
 	//Ho dovuto includere in questa maniere il MappingContext perchè dal project setting non andava
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RogueProjectile.h"
 #include "GameFramework/Actor.h"
 #include "RogueProjectileMagic.generated.h"
 
@@ -14,7 +15,7 @@ class UAudioComponent;
 
 //Abstract impedisce di selezionare direttamente la classe dai dropwdown dei blueprint
 UCLASS(Abstract)
-class ACTIONROUGELIKE_API ARogueProjectileMagic : public AActor
+class ACTIONROUGELIKE_API ARogueProjectileMagic : public ARogueProjectile
 {
 	GENERATED_BODY()
 
@@ -31,33 +32,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
 	
-	/*
-	 * Qui di seqguito venfo creati di puntatori a molteplici components
-	 * Sphere per la collisione
-	 * Niagara per l'effetto VFX
-	 * ProjectileMovement per il movimento
-	 * 
-	 * Tutti componenti gia pre esistenti nel engine
-	 */
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<USphereComponent> SphereComponent;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UNiagaraComponent> LoopedNiagaraComponent;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UAudioComponent> LoopedAudioComponent;
-	
-	UFUNCTION()
-	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const
-	                FHitResult& Hit);
 	
 public:
 	
-	virtual void PostInitializeComponents() override;
+	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const
+					FHitResult& Hit) override;
+	//virtual void PostInitializeComponents() override;
 	// Sets default values for this actor's properties
 	ARogueProjectileMagic();
 };
