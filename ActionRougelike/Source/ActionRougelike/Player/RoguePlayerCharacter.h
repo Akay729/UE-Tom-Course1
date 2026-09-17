@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "RoguePlayerCharacter.generated.h"
 
+class ARogueProjectileBlackhole;
 class ARogueProjectileTeleport;
 class UNiagaraSystem;
 struct FInputActionInstance;
@@ -37,8 +38,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AbilityTeleport();
 	
-	/*UFUNCTION(BlueprintCallable)
-	void AbilityBlackhole();*/
+	UFUNCTION(BlueprintCallable)
+	void AbilityBlackhole();
 	
 	void AttackTimerEnlapsed();
 
@@ -52,6 +53,8 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Teleport Ability")
 	TSubclassOf<ARogueProjectileTeleport> TeleportProjectileClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Blackhole Ability")
+	TSubclassOf<ARogueProjectileBlackhole> BlackholeProjectileClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TObjectPtr<UAnimMontage> AttackMontage;

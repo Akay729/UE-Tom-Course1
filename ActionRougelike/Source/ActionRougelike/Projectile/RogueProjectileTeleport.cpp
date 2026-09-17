@@ -16,7 +16,9 @@ ARogueProjectileTeleport::ARogueProjectileTeleport()
 void ARogueProjectileTeleport::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &ARogueProjectileTeleport::StartExplosion,teleportSpeed, false);
+	PawnToTeleport = GetInstigator();
+	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &ARogueProjectileTeleport::StartExplosion,
+		teleportSpeed, false);
 }
 
 void ARogueProjectileTeleport::StartExplosion()
@@ -25,20 +27,26 @@ void ARogueProjectileTeleport::StartExplosion()
 	{
 		return;
 	}
-	GetWorldTimerManager().SetTimer(TeleportTimerHandle, this, &ARogueProjectileTeleport::Teleport,teleportTimeDistance, false);
+	if (IsValid(PawnToTeleport))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, StartPointTeleportSystem, PawnToTeleport->GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, StartPointTeleportSound, PawnToTeleport->GetActorLocation());
+	}
+	GetWorldTimerManager().SetTimer(TeleportTimerHandle, this, &ARogueProjectileTeleport::Teleport,
+		teleportTimeDistance, false);
 }
 
 void ARogueProjectileTeleport::Teleport()
 {
 	FVector ProjectileLocation = GetActorLocation();
-	APawn* PawnToTeleport = GetInstigator();
+	//APawn* PawnToTeleport = GetInstigator();
 	if (!IsValid(PawnToTeleport))
 	{
 		Destroy();
 		return;
 	}
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, TeleportSystem, ProjectileLocation);
-	UGameplayStatics::PlaySoundAtLocation(this, TeleportSound, ProjectileLocation);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, EndTeleportSystem, ProjectileLocation);
+	UGameplayStatics::PlaySoundAtLocation(this, EndPointTeleportSound, ProjectileLocation);
 	
 	PawnToTeleport->TeleportTo(ProjectileLocation, PawnToTeleport->GetActorRotation());
 	

@@ -6,20 +6,34 @@
 #include "RogueProjectile.h"
 #include "RogueProjectileBlackhole.generated.h"
 
-UCLASS()
+class URadialForceComponent;
+
+UCLASS(Abstract)
 class ACTIONROUGELIKE_API ARogueProjectileBlackhole : public ARogueProjectile
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this actor's properties
-	ARogueProjectileBlackhole();
-
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
+	UPROPERTY(EditDefaultsOnly, Category="Componets")
+	TObjectPtr<URadialForceComponent> RadialForceComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Blackhole")
+	float GravityRadius = 100.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Blackhole")
+	float ActionRadius = 50.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Blackhole")
+	float Duration = 5.f;
+	
 public:
-	// Called every frame
+	
+	UFUNCTION()
+	void DestroyBlackhole();
+	
 	virtual void Tick(float DeltaTime) override;
+	
+	ARogueProjectileBlackhole();
 };

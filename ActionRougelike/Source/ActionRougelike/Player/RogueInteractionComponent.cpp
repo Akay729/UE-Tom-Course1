@@ -79,5 +79,4 @@ void URogueInteractionComponent::Interact()
 	IRogueInteractionInterface::Execute_Interact(SelectedActor);
 	}
 	
-	
 }

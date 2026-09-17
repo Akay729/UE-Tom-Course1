@@ -3,24 +3,60 @@
 
 #include "RogueProjectileBlackhole.h"
 
+#include "Components/SphereComponent.h"
+#include "Engine/OverlapResult.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 
-// Sets default values
+
 ARogueProjectileBlackhole::ARogueProjectileBlackhole()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-}
-
-// Called when the game starts or when spawned
-void ARogueProjectileBlackhole::BeginPlay()
-{
-	Super::BeginPlay();
+	//PrimaryActorTick.bCanEverTick = true;
+	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComponent"));
+	RadialForceComponent->SetupAttachment(RootComponent);
+	RadialForceComponent->ImpulseStrength = -1000000;
+	RadialForceComponent->ForceStrength = -1000000;
+	RadialForceComponent->Radius = GravityRadius;
+	RadialForceComponent->bIgnoreOwningActor = true;
+	//RadialForceComponent->AddCollisionChannelToAffect(ECC_GameTraceChannel1);
 	
 }
 
-// Called every frame
+void ARogueProjectileBlackhole::BeginPlay()
+{
+	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = true;
+	
+	FTimerHandle BlackholeTimerHandle;
+	GetWorldTimerManager().SetTimer(BlackholeTimerHandle ,this,  &ARogueProjectileBlackhole::DestroyBlackhole, Duration);
+}
+
 void ARogueProjectileBlackhole::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	RadialForceComponent->FireImpulse();
+	
+	TArray<FOverlapResult> OverlapResults;
+	
+	FCollisionObjectQueryParams CollisonObjectParams;
+	CollisonObjectParams.AddObjectTypesToQuery(ECC_PhysicsBody);
+	
+	FCollisionShape CollisionShape;
+	CollisionShape.SetSphere(ActionRadius);
+	
+	GetWorld()->OverlapMultiByObjectType(OverlapResults, GetActorLocation(), FQuat::Identity, CollisonObjectParams, CollisionShape);
+	DrawDebugSphere(GetWorld(), GetActorLocation(),ActionRadius, 32, FColor::Red, false, 0.1f);
+	
+	for (FOverlapResult& OverlapResult : OverlapResults)
+	{
+		AActor* ResultActor = OverlapResult.GetActor();
+		if (IsValid(ResultActor))
+		{
+			ResultActor->Destroy();
+		}
+	}
 }
 
+void ARogueProjectileBlackhole::DestroyBlackhole()
+{
+	Destroy();
+}

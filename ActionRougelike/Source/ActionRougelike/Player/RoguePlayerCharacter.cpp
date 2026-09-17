@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectile/RogueProjectileMagic.h"
 #include "Projectile/RogueProjectileTeleport.h"
+#include "Projectile/RogueProjectileBlackhole.h"
 
 
 // Sets default values
@@ -45,6 +46,7 @@ void ARoguePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::LookAction);
 	EnhancedInputComponent->BindAction(IA_PrimaryAttack, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::PrimaryShoot);
 	EnhancedInputComponent->BindAction(IA_AbilityTeleport, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::AbilityTeleport);
+	EnhancedInputComponent->BindAction(IA_AbilityBlackhole, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::AbilityBlackhole);
 	EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::Jump);
 }
 // Called when the game starts or when spawned
@@ -128,6 +130,22 @@ void ARoguePlayerCharacter::AbilityTeleport()
 	UGameplayStatics::PlaySound2D(this,ChargeSoundEffect);
 	
 	GetWorldTimerManager().SetTimer(TimerHandle, this ,&ARoguePlayerCharacter::AttackTimerEnlapsed, AttackDelayTime);*/
+}
+
+void ARoguePlayerCharacter::AbilityBlackhole()
+{
+	
+	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
+	FRotator SpawnRotation = GetControlRotation();
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator = this;
+	//Devo controllare meglio questa riga
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	AActor* NewActor = GetWorld()->SpawnActor<AActor>(BlackholeProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	MoveIgnoreActorAdd(NewActor);
+
 }
 
 

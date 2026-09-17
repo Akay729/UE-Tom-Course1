@@ -8,7 +8,7 @@
 
 class UNiagaraSystem;
 
-UCLASS()
+UCLASS(Abstract)
 class ACTIONROUGELIKE_API ARogueProjectileTeleport : public ARogueProjectile
 {
 	GENERATED_BODY()
@@ -27,13 +27,20 @@ protected:
 	float teleportTimeDistance = 0.2f; 
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
-	TObjectPtr<USoundBase>  TeleportSound;
+	TObjectPtr<USoundBase>  StartPointTeleportSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	TObjectPtr<USoundBase>  EndPointTeleportSound;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
-	TObjectPtr<UNiagaraSystem>  TeleportSystem;
+	TObjectPtr<UNiagaraSystem>  StartPointTeleportSystem;
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	TObjectPtr<UNiagaraSystem>  EndTeleportSystem;
 	
 	UPROPERTY(VisibleAnywhere)
 	bool bIsExploding;
+	
+	UPROPERTY(VisibleAnywhere)
+	APawn* PawnToTeleport;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
