@@ -14,7 +14,6 @@ class ACTIONROUGELIKE_API ARogueProjectileBlackhole : public ARogueProjectile
 	GENERATED_BODY()
 
 protected:
-	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Componets")
 	TObjectPtr<URadialForceComponent> RadialForceComponent;
@@ -30,10 +29,10 @@ protected:
 	
 public:
 	
+	virtual void PostInitializeComponents() override; 
 	UFUNCTION()
-	void DestroyBlackhole();
-	
-	virtual void Tick(float DeltaTime) override;
+	void OnSphereOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 	ARogueProjectileBlackhole();
 };

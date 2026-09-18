@@ -4,8 +4,9 @@
 #include "RogueProjectileBlackhole.h"
 
 #include "Components/SphereComponent.h"
-#include "Engine/OverlapResult.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+
+
 
 
 ARogueProjectileBlackhole::ARogueProjectileBlackhole()
@@ -13,50 +14,53 @@ ARogueProjectileBlackhole::ARogueProjectileBlackhole()
 	//PrimaryActorTick.bCanEverTick = true;
 	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComponent"));
 	RadialForceComponent->SetupAttachment(RootComponent);
-	RadialForceComponent->ImpulseStrength = -1000000;
 	RadialForceComponent->ForceStrength = -1000000;
 	RadialForceComponent->Radius = GravityRadius;
 	RadialForceComponent->bIgnoreOwningActor = true;
-	//RadialForceComponent->AddCollisionChannelToAffect(ECC_GameTraceChannel1);
+
+	RadialForceComponent->RemoveObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	
+	InitialLifeSpan = 5.0f;
 	
 }
 
-void ARogueProjectileBlackhole::BeginPlay()
+void ARogueProjectileBlackhole::PostInitializeComponents()
 {
-	Super::BeginPlay();
-	PrimaryActorTick.bCanEverTick = true;
+	Super::PostInitializeComponents();
 	
-	FTimerHandle BlackholeTimerHandle;
-	GetWorldTimerManager().SetTimer(BlackholeTimerHandle ,this,  &ARogueProjectileBlackhole::DestroyBlackhole, Duration);
+	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ARogueProjectileBlackhole::OnSphereOverlappedActor);
 }
 
-void ARogueProjectileBlackhole::Tick(float DeltaTime)
+void ARogueProjectileBlackhole::OnSphereOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
-	RadialForceComponent->FireImpulse();
-	
-	TArray<FOverlapResult> OverlapResults;
-	
-	FCollisionObjectQueryParams CollisonObjectParams;
-	CollisonObjectParams.AddObjectTypesToQuery(ECC_PhysicsBody);
-	
-	FCollisionShape CollisionShape;
-	CollisionShape.SetSphere(ActionRadius);
-	
-	GetWorld()->OverlapMultiByObjectType(OverlapResults, GetActorLocation(), FQuat::Identity, CollisonObjectParams, CollisionShape);
-	DrawDebugSphere(GetWorld(), GetActorLocation(),ActionRadius, 32, FColor::Red, false, 0.1f);
-	
-	for (FOverlapResult& OverlapResult : OverlapResults)
+	UE_LOG(LogTemp, Warning, TEXT("[BH] Overlap fired. Me=%s Other=%s Comp=%s"),
+			*GetName(),
+			OtherActor ? *OtherActor->GetName() : TEXT("NULL"),
+			OtherComp ? *OtherComp->GetName() : TEXT("NULL"));
+
+	if (!IsValid(OtherActor) || !IsValid(OtherComp))
 	{
-		AActor* ResultActor = OverlapResult.GetActor();
-		if (IsValid(ResultActor))
-		{
-			ResultActor->Destroy();
-		}
+		UE_LOG(LogTemp, Error, TEXT("[BH] Abort: OtherActor or OtherComp invalid"));
+		return;
 	}
-}
+	
 
-void ARogueProjectileBlackhole::DestroyBlackhole()
-{
-	Destroy();
+	const bool bSim = OtherComp->IsSimulatingPhysics();
+	UE_LOG(LogTemp, Warning,
+		TEXT("[BH] %s | Profile=%s ObjectType=%d CollisionEnabled=%d SimulatePhysics=%s"),
+		*OtherActor->GetName(),
+		*OtherComp->GetCollisionProfileName().ToString(),
+		static_cast<int32>(OtherComp->GetCollisionObjectType()),
+		static_cast<int32>(OtherComp->GetCollisionEnabled()),
+		bSim ? TEXT("YES") : TEXT("NO"));
+
+	if (!bSim)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[BH] Not destroyed (no SimulatePhysics): %s"), *OtherActor->GetName());
+		return;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("[BH] DESTROY %s"), *OtherActor->GetName());
+	OtherActor->Destroy();
 }

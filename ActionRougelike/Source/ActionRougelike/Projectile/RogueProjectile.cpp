@@ -4,9 +4,11 @@
 #include "RogueProjectile.h"
 
 #include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -43,5 +45,13 @@ void ARogueProjectile::PostInitializeComponents()
 void ARogueProjectile::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	PlayExplodeEffects();
 	
+	Destroy();
+}
+
+void ARogueProjectile::PlayExplodeEffects()
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionSystem, GetActorLocation());
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
 }

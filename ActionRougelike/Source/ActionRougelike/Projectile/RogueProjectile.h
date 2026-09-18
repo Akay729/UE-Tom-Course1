@@ -6,12 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "RogueProjectile.generated.h"
 
+class UNiagaraSystem;
 class UNiagaraComponent;
 class UProjectileMovementComponent;
 class USphereComponent;
 class UAudioComponent;
 
-UCLASS(abstract)
+UCLASS(Abstract)
 class ACTIONROUGELIKE_API ARogueProjectile : public AActor
 {
 	GENERATED_BODY()
@@ -37,9 +38,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Projectile Components")
 	TObjectPtr<UAudioComponent> LoopedAudioComponent;
 	
-	/*UFUNCTION()
-	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const
-					FHitResult& Hit);*/
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> ExplosionSound;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UNiagaraSystem> ExplosionSystem;
+
+	UFUNCTION()
+	void PlayExplodeEffects();
 	
 public:
 	
