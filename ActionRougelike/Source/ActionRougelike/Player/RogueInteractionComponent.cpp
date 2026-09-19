@@ -45,6 +45,7 @@ void URogueInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 		
 		float DotResult = FVector::DotProduct(OverlapDirection, PC->GetControlRotation().Vector());
 		
+		//Da rivedere
 		if (DotResult > HighestDotResult)
 		{
 			HighestDotResult = DotResult;
@@ -69,11 +70,7 @@ void URogueInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 
 void URogueInteractionComponent::Interact()
 {
-	/*if (IRogueInteractionInterface* InteractInterface = Cast<IRogueInteractionInterface>(SelectedActor))
-	{
-		InteractInterface->Interact();
-	}*/
-
+	
 	if (SelectedActor)
 	{
 	IRogueInteractionInterface::Execute_Interact(SelectedActor);

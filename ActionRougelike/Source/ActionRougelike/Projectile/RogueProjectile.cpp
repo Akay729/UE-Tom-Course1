@@ -45,13 +45,12 @@ void ARogueProjectile::PostInitializeComponents()
 void ARogueProjectile::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	PlayExplodeEffects();
-	
+	PlayHitEffects();
 	Destroy();
 }
 
-void ARogueProjectile::PlayExplodeEffects()
+void ARogueProjectile::PlayHitEffects()
 {
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ExplosionSystem, GetActorLocation());
-	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, HitNiagaraSystem, GetActorLocation());
+	UGameplayStatics::PlaySoundAtLocation(this, HitSoundBase, GetActorLocation());
 }

@@ -38,13 +38,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Projectile Components")
 	TObjectPtr<UAudioComponent> LoopedAudioComponent;
 	
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<USoundBase> ExplosionSound;
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UNiagaraSystem> ExplosionSystem;
+	UPROPERTY(EditDefaultsOnly, Category="Projectile Hit Effect")
+	TObjectPtr<USoundBase> HitSoundBase;
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile Hit Effect")
+	TObjectPtr<UNiagaraSystem> HitNiagaraSystem;
 
 	UFUNCTION()
-	void PlayExplodeEffects();
+	void PlayHitEffects();
 	
 public:
 	

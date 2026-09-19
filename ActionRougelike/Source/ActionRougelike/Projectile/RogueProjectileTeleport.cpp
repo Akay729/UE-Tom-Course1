@@ -3,7 +3,9 @@
 
 #include "RogueProjectileTeleport.h"
 
+#include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -17,40 +19,47 @@ void ARogueProjectileTeleport::BeginPlay()
 {
 	Super::BeginPlay();
 	PawnToTeleport = GetInstigator();
-	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &ARogueProjectileTeleport::StartExplosion,
-		teleportSpeed, false);
+	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &ARogueProjectileTeleport::StartTeleport,
+		timeBeforeTeleport, false);
 }
 
-void ARogueProjectileTeleport::StartExplosion()
+void ARogueProjectileTeleport::StartTeleport()
 {
 	if (bIsExploding ||GetWorldTimerManager().TimerExists(TeleportTimerHandle))
 	{
+		Destroy();
 		return;
 	}
-	if (IsValid(PawnToTeleport))
+	if (!IsValid(PawnToTeleport))
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, StartPointTeleportSystem, PawnToTeleport->GetActorLocation());
-		UGameplayStatics::PlaySoundAtLocation(this, StartPointTeleportSound, PawnToTeleport->GetActorLocation());
+		Destroy();
+		return;
 	}
+	
+	LoopedNiagaraComponent->Deactivate();
+	LoopedAudioComponent->Stop();
+	
+	//Effects
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, StartPointTeleportSystem, PawnToTeleport->GetActorLocation());
+	UGameplayStatics::PlaySoundAtLocation(this, StartPointTeleportSound, PawnToTeleport->GetActorLocation());
+	
 	GetWorldTimerManager().SetTimer(TeleportTimerHandle, this, &ARogueProjectileTeleport::Teleport,
 		teleportTimeDistance, false);
 }
 
 void ARogueProjectileTeleport::Teleport()
 {
-	FVector ProjectileLocation = GetActorLocation();
-	//APawn* PawnToTeleport = GetInstigator();
+	bIsExploding = true;
 	if (!IsValid(PawnToTeleport))
 	{
 		Destroy();
 		return;
 	}
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, EndTeleportSystem, ProjectileLocation);
-	UGameplayStatics::PlaySoundAtLocation(this, EndPointTeleportSound, ProjectileLocation);
 	
-	PawnToTeleport->TeleportTo(ProjectileLocation, PawnToTeleport->GetActorRotation());
+	//PlayhitEffects in questo caso è il varoco finale del teleport
+	PlayHitEffects();
 	
-	bIsExploding = true;
+	PawnToTeleport->TeleportTo(GetActorLocation(), PawnToTeleport->GetActorRotation());
 	Destroy();
 }
 
@@ -59,7 +68,7 @@ void ARogueProjectileTeleport::OnActorHit(UPrimitiveComponent* HitComponent, AAc
 {
 	
 	GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
-	StartExplosion();
+	StartTeleport();
 	
 }
 

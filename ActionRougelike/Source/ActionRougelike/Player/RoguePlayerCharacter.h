@@ -6,8 +6,8 @@
 #include "GameFramework/Character.h"
 #include "RoguePlayerCharacter.generated.h"
 
-class ARogueProjectileBlackhole;
-class ARogueProjectileTeleport;
+
+class ARogueProjectile;
 class UNiagaraSystem;
 struct FInputActionInstance;
 struct FInputActionValue;
@@ -25,36 +25,23 @@ class ACTIONROUGELIKE_API ARoguePlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ARoguePlayerCharacter();
-	
-	UFUNCTION(BlueprintCallable)
-	void MoveAction(const FInputActionValue& value);
-	
-	UFUNCTION(BlueprintCallable)
-	void LookAction(const FInputActionInstance& value);
-	
-	UFUNCTION(BlueprintCallable)
-	void PrimaryShoot();
-	
-	UFUNCTION(BlueprintCallable)
-	void AbilityTeleport();
-	
-	UFUNCTION(BlueprintCallable)
-	void AbilityBlackhole();
-	
-	void AttackTimerEnlapsed();
 
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	FName MuzzleSocketName;
 	
+	//Type of projectile
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TSubclassOf<ARogueProjectileMagic> MagicProjectileClass;
+	TSubclassOf<ARogueProjectile> PrimaryAttackProjectileClass;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Teleport Ability")
-	TSubclassOf<ARogueProjectileTeleport> TeleportProjectileClass;
-	UPROPERTY(EditDefaultsOnly, Category = "Blackhole Ability")
-	TSubclassOf<ARogueProjectileBlackhole> BlackholeProjectileClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	TSubclassOf<ARogueProjectile> SpecialProjectileClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	TSubclassOf<ARogueProjectile> SecondaryAttackProjectileClass;
+	//---
+	
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TObjectPtr<UAnimMontage> AttackMontage;
@@ -95,9 +82,13 @@ protected:
 	//Ho dovuto includere in questa maniere il MappingContext perchè dal project setting non andava
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
 	UInputMappingContext* DefaultMappingContext;
+
+	void MoveAction(const FInputActionValue& value);
 	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	void LookAction(const FInputActionInstance& value);
+	
+	void StartProjectileAttack(TSubclassOf<ARogueProjectile> ProjectileClass);
+	void AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> ProjectileClass);
 
 public:
 	// Called every frame

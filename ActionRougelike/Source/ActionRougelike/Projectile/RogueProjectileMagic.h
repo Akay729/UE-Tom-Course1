@@ -24,23 +24,13 @@ protected:
 	// Damage viene tradotto in "Danno"... Ho perso 10 min per questo
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TSubclassOf<UDamageType> DmgTypeClass;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Sound")
-	TObjectPtr<USoundBase> HitSoundEffect;
-	
-	//Effetto quando fa collisione con qualcosa
-	UPROPERTY(EditAnywhere, Category = "Effects")
-	TObjectPtr<UNiagaraSystem> ExplosionEffect;
-	
-	
+
 public:
 	
 	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const
 					FHitResult& Hit) override;
-	//virtual void PostInitializeComponents() override;
-	// Sets default values for this actor's properties
+
 	ARogueProjectileMagic();
 };
-
 
 //Sono stati rimossi  beginplay e tick perchè attualmente non servono

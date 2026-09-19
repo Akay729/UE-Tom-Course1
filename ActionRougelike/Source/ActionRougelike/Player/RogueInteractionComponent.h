@@ -14,7 +14,7 @@ class ACTIONROUGELIKE_API URogueInteractionComponent : public UActorComponent
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
-	float InteractionRadius = 800.f;
+	float InteractionRadius = 500.f;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Interaction")
 	TObjectPtr<AActor> SelectedActor = nullptr;

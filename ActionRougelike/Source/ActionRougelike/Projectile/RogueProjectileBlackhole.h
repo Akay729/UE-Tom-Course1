@@ -22,14 +22,12 @@ protected:
 	float GravityRadius = 100.f;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Blackhole")
-	float ActionRadius = 50.f;
-	
-	UPROPERTY(EditDefaultsOnly, Category="Blackhole")
-	float Duration = 5.f;
+	float LifeSpan = 5.f;
 	
 public:
 	
 	virtual void PostInitializeComponents() override; 
+	
 	UFUNCTION()
 	void OnSphereOverlappedActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

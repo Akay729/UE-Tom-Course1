@@ -21,13 +21,10 @@ AExplosiveBarrel::AExplosiveBarrel()
 	
 	bExploded = false;
 	
-	//@todo URadialForceComponent
-	
 	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComponent"));
 	RadialForceComponent->SetupAttachment(StaticMeshComponent);
 	
 	RadialForceComponent->Radius = 750.f;
-	RadialForceComponent->ImpulseStrength = 150000.f;
 	RadialForceComponent->ForceStrength = 1000.f;
 	RadialForceComponent->Falloff = ERadialImpulseFalloff::RIF_Linear;
 	RadialForceComponent->bAutoActivate = false;

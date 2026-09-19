@@ -17,24 +17,17 @@ protected:
 	FTimerHandle SpawnTimerHandle;
 	FTimerHandle TeleportTimerHandle;
 	
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<AActor>  OwnerActor;
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	float timeBeforeTeleport = 0.2f;
 	
-	UPROPERTY(EditAnywhere, Category = "Teleport")
-	float teleportSpeed = 0.2f;
-	
-	UPROPERTY(EditAnywhere, Category = "Teleport")
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
 	float teleportTimeDistance = 0.2f; 
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport Effect")
 	TObjectPtr<USoundBase>  StartPointTeleportSound;
-	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
-	TObjectPtr<USoundBase>  EndPointTeleportSound;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport Effect")
 	TObjectPtr<UNiagaraSystem>  StartPointTeleportSystem;
-	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
-	TObjectPtr<UNiagaraSystem>  EndTeleportSystem;
 	
 	UPROPERTY(VisibleAnywhere)
 	bool bIsExploding;
@@ -47,7 +40,7 @@ protected:
 	
 public:
 	
-	void StartExplosion();
+	void StartTeleport();
 	void Teleport();
 	// Sets default values for this actor's properties
 	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;

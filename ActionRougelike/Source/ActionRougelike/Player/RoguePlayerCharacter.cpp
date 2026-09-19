@@ -44,15 +44,10 @@ void ARoguePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::MoveAction);
 	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::LookAction);
-	EnhancedInputComponent->BindAction(IA_PrimaryAttack, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::PrimaryShoot);
-	EnhancedInputComponent->BindAction(IA_AbilityTeleport, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::AbilityTeleport);
-	EnhancedInputComponent->BindAction(IA_AbilityBlackhole, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::AbilityBlackhole);
+	EnhancedInputComponent->BindAction(IA_PrimaryAttack, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::StartProjectileAttack, PrimaryAttackProjectileClass);
+	EnhancedInputComponent->BindAction(IA_AbilityTeleport, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::StartProjectileAttack, SecondaryAttackProjectileClass);
+	EnhancedInputComponent->BindAction(IA_AbilityBlackhole, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::StartProjectileAttack, SpecialProjectileClass);
 	EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::Jump);
-}
-// Called when the game starts or when spawned
-void ARoguePlayerCharacter::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 // Called every frame
@@ -91,66 +86,25 @@ void ARoguePlayerCharacter::LookAction(const FInputActionInstance& value)
 	AddControllerYawInput(LookVector.X);
 }
 
-void ARoguePlayerCharacter::PrimaryShoot()
+void ARoguePlayerCharacter::StartProjectileAttack(TSubclassOf<ARogueProjectile> ProjectileClass)
 {
 	PlayAnimMontage(AttackMontage);
 	
-	FTimerHandle TimerHandle;
-	constexpr float AttackDelayTime = 0.2f;
-	
-	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName, FVector::ZeroVector, 
-		FRotator::ZeroRotator,EAttachLocation::Type::SnapToTarget,true);
-	
-	UGameplayStatics::PlaySound2D(this,ChargeSoundEffect);
-	
-	GetWorldTimerManager().SetTimer(TimerHandle, this ,&ARoguePlayerCharacter::AttackTimerEnlapsed, AttackDelayTime);
-}
-
-
-void ARoguePlayerCharacter::AbilityTeleport()
-{
-	
-	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
-	FRotator SpawnRotation = GetControlRotation();
-	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Instigator = this;
-	//Devo controllare meglio questa riga
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
-	AActor* NewActor = GetWorld()->SpawnActor<AActor>(TeleportProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
-	MoveIgnoreActorAdd(NewActor);
-	/*PlayAnimMontage(AttackMontage);
-	
-	FTimerHandle TimerHandle;
-	constexpr float AttackDelayTime = 0.2f;
-	
 	UNiagaraFunctionLibrary::SpawnSystemAttached(CastingEffect, GetMesh(), MuzzleSocketName, FVector::ZeroVector, 
 		FRotator::ZeroRotator,EAttachLocation::Type::SnapToTarget,true);
 	UGameplayStatics::PlaySound2D(this,ChargeSoundEffect);
 	
-	GetWorldTimerManager().SetTimer(TimerHandle, this ,&ARoguePlayerCharacter::AttackTimerEnlapsed, AttackDelayTime);*/
+	FTimerHandle AttackTimerHandle;
+	constexpr float AttackDelayTime = 0.2f;
+	
+	FTimerDelegate Delegate;
+	Delegate.BindUObject(this, &ARoguePlayerCharacter::AttackTimerEnlapsed, ProjectileClass);
+	
+	GetWorldTimerManager().SetTimer(AttackTimerHandle, Delegate, AttackDelayTime, false);
+	
 }
 
-void ARoguePlayerCharacter::AbilityBlackhole()
-{
-	
-	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
-	FRotator SpawnRotation = GetControlRotation();
-	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Instigator = this;
-	//Devo controllare meglio questa riga
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
-	AActor* NewActor = GetWorld()->SpawnActor<AActor>(BlackholeProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
-	MoveIgnoreActorAdd(NewActor);
-
-}
-
-
-
-void ARoguePlayerCharacter::AttackTimerEnlapsed()
+void ARoguePlayerCharacter::AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> ProjectileClass)
 {
 	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
 	FRotator SpawnRotation = GetControlRotation();
@@ -160,7 +114,7 @@ void ARoguePlayerCharacter::AttackTimerEnlapsed()
 	//Devo controllare meglio questa riga
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
-	AActor* NewActor = GetWorld()->SpawnActor<AActor>(MagicProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	AActor* NewActor = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 	
 	MoveIgnoreActorAdd(NewActor);
 }
