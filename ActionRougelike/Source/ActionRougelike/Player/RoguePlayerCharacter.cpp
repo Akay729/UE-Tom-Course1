@@ -7,10 +7,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "NiagaraFunctionLibrary.h"
+#include "ActionSystem/RogueActionSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Projectile/RogueProjectileMagic.h"
 #include "Projectile/RogueProjectileTeleport.h"
-#include "Projectile/RogueProjectileBlackhole.h"
 
 
 // Sets default values
@@ -27,6 +26,8 @@ ARoguePlayerCharacter::ARoguePlayerCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
+	ActionSystemComponent = CreateDefaultSubobject<URogueActionSystemComponent>(TEXT("ActionSystemComponent"));
+	
 	MuzzleSocketName = "Muzzle_01";
 }
 
@@ -48,12 +49,6 @@ void ARoguePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInputComponent->BindAction(IA_AbilityTeleport, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::StartProjectileAttack, SecondaryAttackProjectileClass);
 	EnhancedInputComponent->BindAction(IA_AbilityBlackhole, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::StartProjectileAttack, SpecialProjectileClass);
 	EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::Jump);
-}
-
-// Called every frame
-void ARoguePlayerCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void ARoguePlayerCharacter::MoveAction(const FInputActionValue& value)
@@ -117,4 +112,20 @@ void ARoguePlayerCharacter::AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> Pr
 	AActor* NewActor = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 	
 	MoveIgnoreActorAdd(NewActor);
+}
+
+float ARoguePlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+	class AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
+	ActionSystemComponent->ApplayHealthChange(-ActualDamage);
+	
+	return ActualDamage;
+}
+
+
+void ARoguePlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }

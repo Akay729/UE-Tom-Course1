@@ -7,6 +7,7 @@
 #include "RoguePlayerCharacter.generated.h"
 
 
+class URogueActionSystemComponent;
 class ARogueProjectile;
 class UNiagaraSystem;
 struct FInputActionInstance;
@@ -28,8 +29,6 @@ public:
 
 protected:
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	FName MuzzleSocketName;
 	
 	//Type of projectile
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
@@ -40,11 +39,13 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TSubclassOf<ARogueProjectile> SecondaryAttackProjectileClass;
-	//---
 	
-	
+	// -- aniamtion and effects 
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TObjectPtr<UAnimMontage> AttackMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
+	FName MuzzleSocketName;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TObjectPtr<UNiagaraSystem> CastingEffect;
@@ -52,6 +53,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TObjectPtr<USoundBase> ChargeSoundEffect;
 	
+	// -- components --
 	// Vecchia alternativa non si usa più: 
 	// UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -59,6 +61,15 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	TObjectPtr<URogueActionSystemComponent> ActionSystemComponent ;
+	
+	
+	// -- input --
+	//Ho dovuto includere in questa maniere il MappingContext perchè dal project setting non andava
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
+	UInputMappingContext* DefaultMappingContext;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Move;
@@ -72,17 +83,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Jump;
 	
-	// -- Ability --
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_AbilityTeleport;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_AbilityBlackhole;
 	
-	//Ho dovuto includere in questa maniere il MappingContext perchè dal project setting non andava
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
-	UInputMappingContext* DefaultMappingContext;
-
+	// -- function
 	void MoveAction(const FInputActionValue& value);
 	
 	void LookAction(const FInputActionInstance& value);
@@ -96,4 +103,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 };
