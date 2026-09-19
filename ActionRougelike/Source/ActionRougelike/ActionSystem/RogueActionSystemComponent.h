@@ -18,6 +18,10 @@ struct FRogueAttributeSet
 	float Health;
 };
 
+// Dynamic: per esplorlo ai blueprint
+// Multicast: per dirgli che si aspetta più listener
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, OldHealth);
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONROUGELIKE_API URogueActionSystemComponent : public UActorComponent
@@ -26,6 +30,9 @@ class ACTIONROUGELIKE_API URogueActionSystemComponent : public UActorComponent
 
 public:
 	void ApplayHealthChange(float InValueChange);
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChanged OnHealthChanged;
 	
 protected:
 	

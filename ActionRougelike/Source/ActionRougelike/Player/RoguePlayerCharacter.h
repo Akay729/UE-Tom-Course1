@@ -44,6 +44,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	TObjectPtr<UAnimMontage> AttackMontage;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Death")
+	TObjectPtr<UAnimMontage> DeathMontage;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
 	FName MuzzleSocketName;
 	
@@ -97,10 +100,14 @@ protected:
 	void StartProjectileAttack(TSubclassOf<ARogueProjectile> ProjectileClass);
 	void AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> ProjectileClass);
 
+	UFUNCTION()
+	void OnHealthChanged(float NewHealth, float OldHealth);
+	
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	
+	
+	virtual void PostInitializeComponents() override; 
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	

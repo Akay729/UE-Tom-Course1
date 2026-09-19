@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "NiagaraFunctionLibrary.h"
 #include "ActionSystem/RogueActionSystemComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile/RogueProjectileTeleport.h"
 
@@ -114,8 +115,18 @@ void ARoguePlayerCharacter::AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> Pr
 	MoveIgnoreActorAdd(NewActor);
 }
 
+void ARoguePlayerCharacter::OnHealthChanged(float NewHealth, float OldHealth)
+{
+	if(FMath::IsNearlyZero(NewHealth) || NewHealth <= 0.0f)
+	{
+		DisableInput(nullptr);
+		GetMovementComponent()->StopMovementImmediately();
+		PlayAnimMontage(DeathMontage);
+	}
+}
+
 float ARoguePlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
-	class AController* EventInstigator, AActor* DamageCauser)
+                                        class AController* EventInstigator, AActor* DamageCauser)
 {
 	float ActualDamage =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
@@ -125,7 +136,9 @@ float ARoguePlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent 
 }
 
 
-void ARoguePlayerCharacter::Tick(float DeltaTime)
+void ARoguePlayerCharacter::PostInitializeComponents()
 {
-	Super::Tick(DeltaTime);
+	Super::PostInitializeComponents();
+	
+	ActionSystemComponent->OnHealthChanged.AddDynamic(this, &ARoguePlayerCharacter::OnHealthChanged);
 }

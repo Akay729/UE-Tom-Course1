@@ -14,6 +14,14 @@ URogueActionSystemComponent::URogueActionSystemComponent()
 
 void URogueActionSystemComponent::ApplayHealthChange(float InValueChange)
 {
-	RogueAttributeSet.Health += InValueChange;
-	UE_LOG(LogTemp, Log, TEXT("New Health: %f"), RogueAttributeSet.Health);
+	float OldHealth = RogueAttributeSet.Health ;
+	float MaxHealth = GetDefault<URogueActionSystemComponent>()->RogueAttributeSet.Health;
+	
+	RogueAttributeSet.Health = FMath::Clamp(RogueAttributeSet.Health + InValueChange, 0.0f, MaxHealth );
+	
+	if (!FMath::IsNearlyEqual(OldHealth, RogueAttributeSet.Health))
+	{
+		OnHealthChanged.Broadcast(RogueAttributeSet.Health, OldHealth);
+	}
+	UE_LOG(LogTemp, Log, TEXT("New Health: %f Max Health %f"), RogueAttributeSet.Health, MaxHealth);
 }
