@@ -15,9 +15,9 @@ Riprendere le basi di Unreal Engine C++ e costruire gradualmente un action/rouge
 - [x] 4. Assignment 1  
 - [x] 5. Interfaces & Collision Queries
 - [x] 6. Blueprint Scripting 
-- [ ] 7. Assignment 2 **in corso**
-- [ ] 8. Player Attributes
-- [ ] 9. Improving The Systems
+- [x] 7. Assignment 2
+- [x] 8. Player Attributes 
+- [ ] 9. Improving The Systems **in corso**
 - [ ] 10. Assignment 3
 - [ ] 11. Enemy Monsters (AI / Behavior Tree / EQS)
 - [ ] 12. Assignment 4
@@ -44,3 +44,5 @@ Riprendere le basi di Unreal Engine C++ e costruire gradualmente un action/rouge
 - meglio non usare rider su linux non ho capito il motivo ma mi fa crashare ogni versione di UE dopo la 5.5.2, ho capito soltato che anche passare ad un elemento della hud del edito causa il crash istantaneo.
 - In Assignment 1: Ho capito la importanza di UNiagaraFunctionLibrary::SpawnSystemAttached e diUNiagaraFunctionLibrary::SpawnSystemAtLocation
 - ho iniziato a fare note sui BP dal punto 6.
+- Nel Assgmnent 2: Ho capito quanto sia importate mettere u function ma in particolar modo guardare l'output log in game, se qualcosa va storto molti errori vengono communicati li.
+
