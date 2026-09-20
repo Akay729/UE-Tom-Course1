@@ -12,10 +12,13 @@ struct FRogueAttributeSet
 	GENERATED_BODY();
 	
 	FRogueAttributeSet() 
-		: Health(100.f) {}
+		: Health(100.f), MaxHealth(100.f){}
 	
 	UPROPERTY(BlueprintReadOnly)
 	float Health;
+	
+	UPROPERTY(BlueprintReadOnly)
+	float MaxHealth;
 };
 
 // Dynamic: per esplorlo ai blueprint
