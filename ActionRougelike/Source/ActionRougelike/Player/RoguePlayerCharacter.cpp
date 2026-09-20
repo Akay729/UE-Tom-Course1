@@ -13,7 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectile/RogueProjectileTeleport.h"
 
-TAutoConsoleVariable<float> CVarCharacterDebugDrawing(TEXT("game.playercharacter.DebugDrawing"), false,
+TAutoConsoleVariable<float> CVarProjectileAdjustmentDebugDrawing(TEXT("game.playercharacter.DebugDrawing"), false,
 	TEXT("Enable debug drawing (0=Off, 1=On)"), ECVF_Cheat);
 
 // Sets default values
@@ -139,7 +139,7 @@ void ARoguePlayerCharacter::AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> Pr
 	
 	//DEBUG
 #if !UE_BUILD_SHIPPING
-	float LifetimeDebugDuration = CVarCharacterDebugDrawing.GetValueOnGameThread();
+	float LifetimeDebugDuration = CVarProjectileAdjustmentDebugDrawing.GetValueOnGameThread();
 	
 	if (LifetimeDebugDuration > 0.f)
 	{
