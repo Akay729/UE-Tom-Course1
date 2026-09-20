@@ -3,41 +3,29 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RoguePickupActor.h"
 #include "GameFramework/Actor.h"
 #include "RogueHealthPickup.generated.h"
 
 class UNiagaraComponent;
 class USphereComponent;
 
-UCLASS()
-class ACTIONROUGELIKE_API ARogueHealthPickup : public AActor
+UCLASS(Abstract)
+class ACTIONROUGELIKE_API ARogueHealthPickup : public ARoguePickupActor
 {
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<USphereComponent> SphereComponent;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UStaticMeshComponent> MeshComponent;
+	virtual void OnActorOverlapped( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<UNiagaraComponent> PickupSystem;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Effects")
-	TObjectPtr<USoundBase> PickupSound;
-
-	UFUNCTION()
-	void PickUpItem( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	bool bIsPickedUp;
 	UPROPERTY(EditDefaultsOnly, Category = "Heal")
-	float HealhValue;
+	float HealingAmount;
 	
 public:
 	
-	virtual void PostInitializeComponents() override;
 	// Sets default values for this actor's properties
 	ARogueHealthPickup();
 };
