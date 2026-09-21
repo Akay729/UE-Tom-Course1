@@ -17,6 +17,7 @@ AExplosiveBarrel::AExplosiveBarrel()
 	StaticMeshComponent->SetSimulatePhysics(true);
 	StaticMeshComponent->SetCollisionProfileName("PhysicsActor");
 	StaticMeshComponent->SetCollisionProfileName("Interaction");
+	StaticMeshComponent->SetCanEverAffectNavigation(false);
 	RootComponent = StaticMeshComponent;
 	
 	bExploded = false;
