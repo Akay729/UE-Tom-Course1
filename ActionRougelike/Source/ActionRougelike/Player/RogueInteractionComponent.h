@@ -16,8 +16,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	float InteractionRadius = 500.f;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float DistanceToWeightScale = 2.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float DirectionWeightScale = 1.0f;
+	
 	UPROPERTY(VisibleAnywhere, Category = "Interaction")
 	TObjectPtr<AActor> SelectedActor = nullptr;
+	
 public:
 
 	void Interact();

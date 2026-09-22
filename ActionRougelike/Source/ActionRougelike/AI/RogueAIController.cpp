@@ -3,6 +3,7 @@
 
 #include "RogueAIController.h"
 
+#include "CoreTypes.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
