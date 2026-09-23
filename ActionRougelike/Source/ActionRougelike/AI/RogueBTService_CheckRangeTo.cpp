@@ -11,7 +11,7 @@ void URogueBTService_CheckRangeTo::TickNode(UBehaviorTreeComponent& OwnerComp, u
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 	
 	UBlackboardComponent* BBComp = OwnerComp.GetBlackboardComponent();
-	check(BBComp != nullptr);
+	check(BBComp);
 	
 	
 	AActor* TargetActor = Cast<AActor>(BBComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
