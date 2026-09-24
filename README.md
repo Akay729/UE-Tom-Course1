@@ -17,9 +17,9 @@ Riprendere le basi di Unreal Engine C++ e costruire gradualmente un action/rouge
 - [x] 6. Blueprint Scripting 
 - [x] 7. Assignment 2
 - [x] 8. Player Attributes 
-- [ ] 9. Improving The Systems **in corso**
-- [ ] 10. Assignment 3
-- [ ] 11. Enemy Monsters (AI / Behavior Tree / EQS)
+- [x] 9. Improving The Systems 
+- [x] 10. Assignment 3
+- [ ] 11. Enemy Monsters (AI / Behavior Tree / EQS)**in corso**
 - [ ] 12. Assignment 4
 - [ ] 13. Action System (GAS-like)
 - [ ] 14. GameplayTags
