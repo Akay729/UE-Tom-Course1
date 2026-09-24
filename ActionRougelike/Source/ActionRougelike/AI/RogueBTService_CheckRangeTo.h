@@ -20,7 +20,7 @@ class ACTIONROUGELIKE_API URogueBTService_CheckRangeTo : public UBTService
 	UPROPERTY(EditAnywhere, Category="AI")
 	FBlackboardKeySelector WithinRangeKey;
 	
-	UPROPERTY(EditDefaultsOnly, Category="AI")
+	UPROPERTY(EditAnywhere, Category="AI")
 	float MaxAttackRange =  300.f;
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
