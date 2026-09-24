@@ -4,9 +4,16 @@
 #include "RogueBTTask_RangedAttack.h"
 
 #include "AIController.h"
+#include "RogueGameTypes.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
 #include "Projectile/RogueProjectile.h"
+
+
+URogueBTTask_RangedAttack::URogueBTTask_RangedAttack()
+{
+	TargetActorKey.SelectedKeyName = Name_TargetActor;
+}
 
 EBTNodeResult::Type URogueBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -42,3 +49,4 @@ EBTNodeResult::Type URogueBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponen
 	
 	return NewProj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 }
+

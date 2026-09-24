@@ -24,4 +24,6 @@ class ACTIONROUGELIKE_API URogueBTService_CheckRangeTo : public UBTService
 	float MaxAttackRange =  300.f;
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	
+	URogueBTService_CheckRangeTo();
 };

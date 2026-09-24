@@ -31,4 +31,6 @@ class ACTIONROUGELIKE_API URogueBTTask_RangedAttack : public UBTTaskNode
 	
 public:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	
+	URogueBTTask_RangedAttack();
 };
