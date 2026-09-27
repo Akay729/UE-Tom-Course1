@@ -99,6 +99,8 @@ protected:
 	
 	void StartProjectileAttack(TSubclassOf<ARogueProjectile> ProjectileClass);
 	void AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> ProjectileClass);
+	
+	void StartAction(FName InActionName);
 
 	UFUNCTION()
 	void OnHealthChanged(float NewHealth, float OldHealth);
