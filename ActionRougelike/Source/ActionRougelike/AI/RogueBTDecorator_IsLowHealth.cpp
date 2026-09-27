@@ -2,3 +2,20 @@
 
 
 #include "RogueBTDecorator_IsLowHealth.h"
+
+#include "AIController.h"
+#include "ActionSystem/RogueActionSystemComponent.h"
+
+bool URogueBTDecorator_IsLowHealth::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
+{
+	APawn* AIPawn = OwnerComp.GetAIOwner()->GetPawn();
+	check(AIPawn);
+	
+	URogueActionSystemComponent* ActionComp = AIPawn->GetComponentByClass<URogueActionSystemComponent>();
+	
+	if (ensure(ActionComp))
+	{
+		return (ActionComp->GetCurrentHealth() / ActionComp->GetMaxHealth()) < LowHealthFraction;
+	}
+	return false;
+}

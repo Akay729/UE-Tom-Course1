@@ -13,4 +13,12 @@ UCLASS()
 class ACTIONROUGELIKE_API URogueBTTask_HealSelf : public UBTTaskNode
 {
 	GENERATED_BODY()
+	
+protected:
+	
+	UPROPERTY(EditAnywhere, Category="AI")
+	float HealAmount = 50.f;
+	
+public:
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

@@ -25,7 +25,19 @@ void URogueActionSystemComponent::ApplayHealthChange(float InValueChange)
 	UE_LOG(LogTemp, Log, TEXT("New Health: %f Max Health %f"), RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
 }
 
+float URogueActionSystemComponent::GetCurrentHealth()
+{
+	return RogueAttributeSet.Health;
+}
+
+float URogueActionSystemComponent::GetMaxHealth()
+{
+	return RogueAttributeSet.MaxHealth;
+}
+
 bool URogueActionSystemComponent::IsFullHealth() const
 {
 	return FMath::IsNearlyEqual(RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
 }
+
+

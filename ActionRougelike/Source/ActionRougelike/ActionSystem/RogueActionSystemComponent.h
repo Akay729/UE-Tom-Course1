@@ -33,7 +33,8 @@ class ACTIONROUGELIKE_API URogueActionSystemComponent : public UActorComponent
 
 public:
 	void ApplayHealthChange(float InValueChange);
-	
+	float GetCurrentHealth();
+	float GetMaxHealth();
 	bool IsFullHealth() const;
 	
 	UPROPERTY(BlueprintAssignable)

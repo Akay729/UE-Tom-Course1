@@ -11,15 +11,29 @@
 
 void URogueEnvQueryContext_TargetActor::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const
 {
-	//Expecter Character
 	APawn* QuerierPawn = Cast<APawn>(QueryInstance.Owner.Get());
-	if(ensure(QuerierPawn))
+	if (!QuerierPawn)
 	{
-		AAIController* Controller = Cast<AAIController>(QuerierPawn->GetController());
-		check(Controller);
-		
-		AActor* TargetActor =  Cast<AActor>(Controller->GetBlackboardComponent()->GetValueAsObject(Name_TargetActor));
-		UEnvQueryItemType_Actor::SetContextHelper(ContextData, TargetActor);
+		return;
 	}
-	
+
+	AAIController* Controller = Cast<AAIController>(QuerierPawn->GetController());
+	if (!Controller)
+	{
+		return;
+	}
+
+	UBlackboardComponent* Blackboard = Controller->GetBlackboardComponent();
+	if (!Blackboard)
+	{
+		return;
+	}
+
+	AActor* TargetActor = Cast<AActor>(Blackboard->GetValueAsObject(Name_TargetActor));
+	if (!TargetActor)
+	{
+		return;
+	}
+
+	UEnvQueryItemType_Actor::SetContextHelper(ContextData, TargetActor);
 }
