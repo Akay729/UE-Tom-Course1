@@ -17,7 +17,7 @@ void ARoguePlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	
 	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent);
-	EnhancedInput->BindAction(IA_Interaction, ETriggerEvent::Triggered, this, &ARoguePlayerController::StartInteract);
+	EnhancedInput->BindAction(IA_Interaction, ETriggerEvent::Triggered, this, &ThisClass::StartInteract);
 }
 
 void ARoguePlayerController::StartInteract()

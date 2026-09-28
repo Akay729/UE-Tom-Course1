@@ -8,15 +8,12 @@
 
 
 class URogueActionSystemComponent;
-class ARogueProjectile;
-class UNiagaraSystem;
 struct FInputActionInstance;
 struct FInputActionValue;
 class UInputAction;
 class UCameraComponent;
 class USpringArmComponent;
 class UInputMappingContext;
-class ARogueProjectileMagic;
 
 UCLASS()
 class ACTIONROUGELIKE_API ARoguePlayerCharacter : public ACharacter
@@ -29,32 +26,10 @@ public:
 
 protected:
 	
-	
-	//Type of projectile
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TSubclassOf<ARogueProjectile> PrimaryAttackProjectileClass;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TSubclassOf<ARogueProjectile> SpecialProjectileClass;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TSubclassOf<ARogueProjectile> SecondaryAttackProjectileClass;
-	
-	// -- aniamtion and effects 
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TObjectPtr<UAnimMontage> AttackMontage;
-	
+	// -- aniamtion
 	UPROPERTY(EditDefaultsOnly, Category = "Death")
 	TObjectPtr<UAnimMontage> DeathMontage;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	FName MuzzleSocketName;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TObjectPtr<UNiagaraSystem> CastingEffect;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Primary Attack")
-	TObjectPtr<USoundBase> ChargeSoundEffect;
 	
 	// -- components --
 	// Vecchia alternativa non si usa più: 
@@ -96,9 +71,6 @@ protected:
 	void MoveAction(const FInputActionValue& value);
 	
 	void LookAction(const FInputActionInstance& value);
-	
-	void StartProjectileAttack(TSubclassOf<ARogueProjectile> ProjectileClass);
-	void AttackTimerEnlapsed(TSubclassOf<ARogueProjectile> ProjectileClass);
 	
 	void StartAction(FName InActionName);
 

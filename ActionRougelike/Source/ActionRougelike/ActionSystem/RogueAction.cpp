@@ -3,9 +3,11 @@
 
 #include "RogueAction.h"
 
+#include "RogueActionSystemComponent.h"
+
 void URogueAction::StartAction()
 {
-	float GameTime = 0.0f;
+	double GameTime = GetWorld()->GetTimeSeconds();
 	
 	//I 2 Log fanno la stessa cosa
 	
@@ -13,4 +15,9 @@ void URogueAction::StartAction()
 	//UE_LOGFMT(LogTemp, Log, "STARTED ACTION {ActionName} - {WorldTime}", 
 	//	("ActionName", ActionName), 
 	//	("WorldTime",GameTime));
+}
+
+URogueActionSystemComponent* URogueAction::GetOwningComponent() const
+{
+	return Cast<URogueActionSystemComponent>(GetOuter());
 }

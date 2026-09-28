@@ -15,7 +15,19 @@ URogueActionSystemComponent::URogueActionSystemComponent()
 void URogueActionSystemComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
-	URogueAction* NewAction = NewObject<URogueAction>(this, URogueAction::StaticClass());
+	for (TSubclassOf<URogueAction> Action : DefaultActions)
+	{
+		if (ensure(Action))
+		{
+			GrantAction(Action);
+		}
+	}
+	
+}
+
+void URogueActionSystemComponent::GrantAction(TSubclassOf<URogueAction> NewActionClass)
+{
+	URogueAction* NewAction = NewObject<URogueAction>(this, NewActionClass);
 	Actions.Add(NewAction);
 }
 
