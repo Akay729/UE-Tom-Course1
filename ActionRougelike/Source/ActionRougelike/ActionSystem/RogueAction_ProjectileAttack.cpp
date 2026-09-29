@@ -17,7 +17,7 @@ TAutoConsoleVariable<float> CVarProjectileAdjustmentDebugDrawing(TEXT("game.play
 
 URogueAction_ProjectileAttack::URogueAction_ProjectileAttack()
 {
-	
+	CooldownTime = .75f;
 }
 
 void URogueAction_ProjectileAttack::StartAction_Implementation()
@@ -79,6 +79,7 @@ void URogueAction_ProjectileAttack::AttackTimerEnlapsed()
 	
 	Character->MoveIgnoreActorAdd(NewActor);
 	
+	StopAction();
 	//DEBUG
 #if !UE_BUILD_SHIPPING
 	float LifetimeDebugDuration = CVarProjectileAdjustmentDebugDrawing.GetValueOnGameThread();
