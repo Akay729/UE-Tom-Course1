@@ -62,6 +62,9 @@ protected:
 	TObjectPtr<UInputAction> IA_Jump;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Sprint;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_AbilityTeleport;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
@@ -73,6 +76,8 @@ protected:
 	void LookAction(const FInputActionInstance& value);
 	
 	void StartAction(FName InActionName);
+	
+	void StopAction(FName InActionName);
 
 	UFUNCTION()
 	void OnHealthChanged(float NewHealth, float OldHealth);

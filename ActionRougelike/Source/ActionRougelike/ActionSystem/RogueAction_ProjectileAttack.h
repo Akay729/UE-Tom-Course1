@@ -18,8 +18,9 @@ class ACTIONROUGELIKE_API URogueAction_ProjectileAttack : public URogueAction
 	GENERATED_BODY()
 	
 public:
-	virtual void StartAction() override;
+	virtual void StartAction_Implementation() override;
 
+	void AttackTimerEnlapsed();
 	
 protected:
 	
@@ -37,8 +38,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile Attack")
 	TObjectPtr<USoundBase> ChargeSoundEffect;
-	
-	void AttackTimerEnlapsed();
 	
 public:
 	

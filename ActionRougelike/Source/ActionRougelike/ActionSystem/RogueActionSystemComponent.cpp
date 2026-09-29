@@ -46,6 +46,22 @@ void URogueActionSystemComponent::StartAction(FName InActionName)
 	UE_LOG(LogTemp, Warning, TEXT("Action %s not found"), *InActionName.ToString());
 }
 
+void URogueActionSystemComponent::StopAction(FName InActionName)
+{
+	for (URogueAction* Action : Actions)
+	{
+		if (Action->GetActionName() == InActionName)
+		{
+			Action->StopAction();
+			return;
+		}
+		
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("Action %s not found"), *InActionName.ToString());
+}
+
+
 void URogueActionSystemComponent::ApplayHealthChange(float InValueChange)
 {
 	float OldHealth = RogueAttributeSet.Health ;

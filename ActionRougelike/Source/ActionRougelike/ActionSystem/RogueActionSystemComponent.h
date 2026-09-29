@@ -36,6 +36,7 @@ class ACTIONROUGELIKE_API URogueActionSystemComponent : public UActorComponent
 public:
 	
 	void StartAction(FName InActionName);
+	void StopAction(FName InActionName);
 	
 	void ApplayHealthChange(float InValueChange);
 	float GetCurrentHealth();
