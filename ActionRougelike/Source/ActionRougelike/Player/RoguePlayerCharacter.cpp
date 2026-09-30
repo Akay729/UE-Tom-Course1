@@ -8,6 +8,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "ActionSystem/RogueActionSystemComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "GameplayTagContainer.h"
+#include "RogueGameplayTags.h"
 
 
 // Sets default values
@@ -44,12 +46,12 @@ void ARoguePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::MoveAction);
 	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::LookAction);
 	
-	EnhancedInputComponent->BindAction(IA_Sprint, ETriggerEvent::Started, this, &ThisClass::StartAction, FName("Sprint"));
-	EnhancedInputComponent->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &ThisClass::StopAction, FName("Sprint"));
+	EnhancedInputComponent->BindAction(IA_Sprint, ETriggerEvent::Started, this, &ThisClass::StartAction, RogueGameplayTags::Action_Sprint.GetTag());
+	EnhancedInputComponent->BindAction(IA_Sprint, ETriggerEvent::Completed, this, &ThisClass::StopAction, RogueGameplayTags::Action_Sprint.GetTag());
 	//Attacks
-	EnhancedInputComponent->BindAction(IA_AbilityTeleport, ETriggerEvent::Triggered, this, &ThisClass::StartAction, FName("SecondaryAttack"));
-	EnhancedInputComponent->BindAction(IA_PrimaryAttack, ETriggerEvent::Triggered, this, &ThisClass::StartAction, FName("PrimaryAttack"));
-	EnhancedInputComponent->BindAction(IA_AbilityBlackhole, ETriggerEvent::Triggered, this, &ThisClass::StartAction, FName("SpecialAttack"));
+	EnhancedInputComponent->BindAction(IA_AbilityTeleport, ETriggerEvent::Triggered, this, &ThisClass::StartAction, RogueGameplayTags::Action_SecondaryAttack.GetTag());
+	EnhancedInputComponent->BindAction(IA_PrimaryAttack, ETriggerEvent::Triggered, this, &ThisClass::StartAction, RogueGameplayTags::Action_PrimaryAttack.GetTag());
+	EnhancedInputComponent->BindAction(IA_AbilityBlackhole, ETriggerEvent::Triggered, this, &ThisClass::StartAction, RogueGameplayTags::Action_SpecialAttack.GetTag());
 	
 	//Jump
 	EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &ARoguePlayerCharacter::Jump);
@@ -85,12 +87,12 @@ void ARoguePlayerCharacter::LookAction(const FInputActionInstance& value)
 	AddControllerYawInput(LookVector.X);
 }
 
-void ARoguePlayerCharacter::StartAction(FName InActionName)
+void ARoguePlayerCharacter::StartAction(FGameplayTag InActionName)
 {
 	ActionSystemComponent->StartAction(InActionName);
 }
 
-void ARoguePlayerCharacter::StopAction(FName InActionName)
+void ARoguePlayerCharacter::StopAction(FGameplayTag InActionName)
 {
 	ActionSystemComponent->StopAction(InActionName);
 }

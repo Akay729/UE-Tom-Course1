@@ -7,6 +7,7 @@
 #include "RoguePlayerCharacter.generated.h"
 
 
+struct FGameplayTag;
 class URogueActionSystemComponent;
 struct FInputActionInstance;
 struct FInputActionValue;
@@ -75,9 +76,9 @@ protected:
 	
 	void LookAction(const FInputActionInstance& value);
 	
-	void StartAction(FName InActionName);
+	void StartAction(FGameplayTag InActionName);
 	
-	void StopAction(FName InActionName);
+	void StopAction(FGameplayTag InActionName);
 
 	UFUNCTION()
 	void OnHealthChanged(float NewHealth, float OldHealth);
