@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "RogueActionSystemComponent.generated.h"
 
-struct FGameplayTag;
 class URogueAction;
 
 USTRUCT(BlueprintType)
@@ -36,20 +36,31 @@ class ACTIONROUGELIKE_API URogueActionSystemComponent : public UActorComponent
 
 public:
 	
+	//Action
 	void StartAction(FGameplayTag InActionName);
+	
 	void StopAction(FGameplayTag InActionName);
 	
-	void ApplayHealthChange(float InValueChange);
-	float GetCurrentHealth();
-	float GetMaxHealth();
-	bool IsFullHealth() const;
+	void GrantAction(TSubclassOf<URogueAction> NewActionClass);
 	
-	virtual void InitializeComponent() override;
+	//Health
+	void ApplayHealthChange(float InValueChange);
+	
+	float GetCurrentHealth();
+	
+	float GetMaxHealth();
+	
+	bool IsFullHealth() const;
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
+		
+	virtual void InitializeComponent() override;
 	
-	void GrantAction(TSubclassOf<URogueAction> NewActionClass);
+	FGameplayTagContainer ActiveGameplayTags;
+	
+	FGameplayTagContainer BlockedGameplayTags;
+	
 protected:
 	
 	UPROPERTY(BlueprintReadOnly , Category = "Attributes")

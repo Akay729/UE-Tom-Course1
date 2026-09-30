@@ -18,8 +18,20 @@ class ACTIONROUGELIKE_API URogueAction : public UObject
 
 protected:
 	
+	/*
+	 * Avendo implementatto FGameplayTag ora sarà possibile sceglire attraverso un menu
+	 * a tendina nel editor che mostrerà le varie opzioni gameplaty tag
+	 * 
+	 * (Bisogna includere GameplayTag nel build.cs)
+	 */
 	UPROPERTY(EditDefaultsOnly, Category = "Actions")
 	FGameplayTag ActionName;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Actions")
+	FGameplayTagContainer GrantedTags;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Actions")
+	FGameplayTagContainer BlockedTags;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Actions")
 	float CooldownTime = 0.f;

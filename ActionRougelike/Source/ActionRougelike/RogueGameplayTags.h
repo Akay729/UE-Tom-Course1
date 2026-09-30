@@ -9,3 +9,10 @@ namespace RogueGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Action_SpecialAttack);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Action_Sprint);
 }
+
+/*
+ * Quello che è stato fatto in questo file (e nel cpp) è la stessa identica procedura
+ * di crear eun tag attraverso l'engine nella sezione gameplaytags nelle impostazioni 
+ * del progetto.
+ *  Qua viene mostrato come creare quasta macro in codice
+ */
