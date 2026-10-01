@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "RogueAttributeSet.h"
 #include "Components/ActorComponent.h"
 #include "RogueActionSystemComponent.generated.h"
 
@@ -29,14 +30,13 @@ public:
 	
 	void GrantAction(TSubclassOf<URogueAction> NewActionClass);
 	
-	//Health
+	//Attributes
 	void ApplayHealthChange(float InValueChange);
 	
-	float GetCurrentHealth();
-	
-	float GetMaxHealth();
-	
 	bool IsFullHealth() const;
+	
+	FRogueAttribute* GetAttribute(FGameplayTag InAttributeTag); 
+	
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
@@ -51,6 +51,8 @@ protected:
 	
 	UPROPERTY()
 	TObjectPtr<URogueAttributeSet> RogueAttributeSet;
+	
+	TMap<FGameplayTag, FRogueAttribute*> CachedAttributes;
 	
 	UPROPERTY(EditAnywhere, Category=Attributes, NoClear)
 	TSubclassOf<URogueAttributeSet> RogueAttributeSetClass;

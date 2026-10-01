@@ -19,6 +19,16 @@ void URogueActionSystemComponent::InitializeComponent()
 	
 	RogueAttributeSet = NewObject<URogueAttributeSet>(this , RogueAttributeSetClass);
 	
+	for (TFieldIterator<FStructProperty> PropIt(RogueAttributeSet->GetClass()); PropIt; ++PropIt)
+	{
+		FRogueAttribute* FoundAttribute = PropIt->ContainerPtrToValuePtr<FRogueAttribute>(RogueAttributeSet);
+		
+		FName AttributeTagName = FName("Attribute."+ PropIt->GetName());
+		FGameplayTag AttributeTag = FGameplayTag::RequestGameplayTag(AttributeTagName);
+		
+		CachedAttributes.Add(AttributeTag, FoundAttribute);
+	}
+	
 	for (TSubclassOf<URogueAction> Action : DefaultActions)
 	{
 		if (ensure(Action))
@@ -84,19 +94,15 @@ void URogueActionSystemComponent::ApplayHealthChange(float InValueChange)
 	*/
 }
 
-float URogueActionSystemComponent::GetCurrentHealth()
-{
-	return 0.0f;//RogueAttributeSet.Health;
-}
-
-float URogueActionSystemComponent::GetMaxHealth()
-{
-	return 0.0f;//RogueAttributeSet.MaxHealth;
-}
-
 bool URogueActionSystemComponent::IsFullHealth() const
 {
 	return true;//FMath::IsNearlyEqual(RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
+}
+
+FRogueAttribute* URogueActionSystemComponent::GetAttribute(FGameplayTag InAttributeTag)
+{
+	FRogueAttribute** FoundAttribute= CachedAttributes.Find(InAttributeTag);
+	return *FoundAttribute;
 }
 
 
