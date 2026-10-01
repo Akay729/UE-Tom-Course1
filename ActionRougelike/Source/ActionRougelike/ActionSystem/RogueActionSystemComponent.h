@@ -7,22 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "RogueActionSystemComponent.generated.h"
 
+class URogueAttributeSet;
 class URogueAction;
-
-USTRUCT(BlueprintType)
-struct FRogueAttributeSet
-{
-	GENERATED_BODY();
-	
-	FRogueAttributeSet() 
-		: Health(100.f), MaxHealth(100.f){}
-	
-	UPROPERTY(BlueprintReadOnly)
-	float Health;
-	
-	UPROPERTY(BlueprintReadOnly)
-	float MaxHealth;
-};
 
 // Dynamic: per esplorlo ai blueprint
 // Multicast: per dirgli che si aspetta più listener
@@ -63,8 +49,11 @@ public:
 	
 protected:
 	
-	UPROPERTY(BlueprintReadOnly , Category = "Attributes")
-	FRogueAttributeSet RogueAttributeSet;
+	UPROPERTY()
+	TObjectPtr<URogueAttributeSet> RogueAttributeSet;
+	
+	UPROPERTY(EditAnywhere, Category=Attributes, NoClear)
+	TSubclassOf<URogueAttributeSet> RogueAttributeSetClass;
 	
 	UPROPERTY()
 	TArray<TObjectPtr<URogueAction>> Actions;

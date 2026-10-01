@@ -2,7 +2,7 @@
 
 
 #include "RogueActionSystemComponent.h"
-
+#include "RogueAttributeSet.h"
 #include "RogueAction.h"
 
 
@@ -10,11 +10,15 @@
 URogueActionSystemComponent::URogueActionSystemComponent()
 {
 	bWantsInitializeComponent = true;
+	RogueAttributeSetClass = URogueAttributeSet::StaticClass();
 }
 
 void URogueActionSystemComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+	
+	RogueAttributeSet = NewObject<URogueAttributeSet>(this , RogueAttributeSetClass);
+	
 	for (TSubclassOf<URogueAction> Action : DefaultActions)
 	{
 		if (ensure(Action))
@@ -67,6 +71,7 @@ void URogueActionSystemComponent::StopAction(FGameplayTag InActionName)
 
 void URogueActionSystemComponent::ApplayHealthChange(float InValueChange)
 {
+	/*
 	float OldHealth = RogueAttributeSet.Health ;
 	
 	RogueAttributeSet.Health = FMath::Clamp(RogueAttributeSet.Health + InValueChange, 0.0f, RogueAttributeSet.MaxHealth );
@@ -76,21 +81,22 @@ void URogueActionSystemComponent::ApplayHealthChange(float InValueChange)
 		OnHealthChanged.Broadcast(RogueAttributeSet.Health, OldHealth);
 	}
 	UE_LOG(LogTemp, Log, TEXT("New Health: %f Max Health %f"), RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
+	*/
 }
 
 float URogueActionSystemComponent::GetCurrentHealth()
 {
-	return RogueAttributeSet.Health;
+	return 0.0f;//RogueAttributeSet.Health;
 }
 
 float URogueActionSystemComponent::GetMaxHealth()
 {
-	return RogueAttributeSet.MaxHealth;
+	return 0.0f;//RogueAttributeSet.MaxHealth;
 }
 
 bool URogueActionSystemComponent::IsFullHealth() const
 {
-	return FMath::IsNearlyEqual(RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
+	return true;//FMath::IsNearlyEqual(RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
 }
 
 
