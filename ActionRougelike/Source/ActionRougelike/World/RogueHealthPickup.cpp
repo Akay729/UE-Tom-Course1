@@ -3,8 +3,10 @@
 
 #include "RogueHealthPickup.h"
 
+#include "RogueGameplayTags.h"
 #include "ActionSystem/RogueActionSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Core/RogueGameplayStatics.h"
 
 
 // Sets default values
@@ -23,9 +25,9 @@ void ARogueHealthPickup::OnActorOverlapped( UPrimitiveComponent* OverlappedCompo
 	
 	URogueActionSystemComponent* OtherActorActionComp =  OtherActor->GetComponentByClass<URogueActionSystemComponent>();
 	//Ensure 
-	if (ensure(OtherActorActionComp != nullptr) && !OtherActorActionComp->IsFullHealth())
+	if (ensure(OtherActorActionComp != nullptr) && !URogueGameplayStatics::IsFullHealth(OtherActorActionComp))
 	{
-		OtherActorActionComp->ApplayHealthChange(HealingAmount);
+		OtherActorActionComp->ApplayAttributeChange(RogueGameplayTags::Attribute_Health, HealingAmount);
 		UGameplayStatics::PlaySound2D(this, PickupSound);
 		bIsPickedUp = true;
 		Destroy();

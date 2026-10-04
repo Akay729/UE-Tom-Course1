@@ -11,6 +11,16 @@
 class URogueAttributeSet;
 class URogueAction;
 
+UENUM()
+enum EAttributeModifyType
+{
+	Base,
+	Modifier,
+	OverrideBase,
+	Invalid
+};
+
+
 // Dynamic: per esplorlo ai blueprint
 // Multicast: per dirgli che si aspetta più listener
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, OldHealth);
@@ -31,9 +41,17 @@ public:
 	void GrantAction(TSubclassOf<URogueAction> NewActionClass);
 	
 	//Attributes
-	void ApplayHealthChange(float InValueChange);
 	
-	bool IsFullHealth() const;
+	void ApplayAttributeChange(FGameplayTag AttributeTag, float Delta,  EAttributeModifyType ModifyType = Base);
+	
+	/*
+	 *This function is made with the intent to  compare attribute that have a MaxAttribute
+	 *Example:
+	 *Stamina -> StaminaMax
+	 *Health -> HealthMax
+	 */ 
+	
+	bool IsAttributeFull(FGameplayTag AttributeTag, FGameplayTag AttributeMaxTag);
 	
 	FRogueAttribute* GetAttribute(FGameplayTag InAttributeTag); 
 	

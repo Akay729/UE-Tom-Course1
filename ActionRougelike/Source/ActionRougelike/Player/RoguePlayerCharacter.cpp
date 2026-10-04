@@ -112,7 +112,7 @@ float ARoguePlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent 
 {
 	float ActualDamage =  Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
-	ActionSystemComponent->ApplayHealthChange(-ActualDamage);
+	ActionSystemComponent->ApplayAttributeChange(RogueGameplayTags::Attribute_Health, -ActualDamage, Base);
 	
 	return ActualDamage;
 }

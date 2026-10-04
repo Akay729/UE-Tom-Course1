@@ -29,7 +29,7 @@ void URogueAction::StopAction_Implementation()
 	
 	/*UE_LOGFMT(LogTemp, Log, "STOPPED ACTION: {ActionName} - {WorldTime}", ActionName, GameTime);*/
 	
-	UE_LOGFMT(LogTemp, Log, "STARTED ACTION {ActionName} - {WorldTime}", 
+	UE_LOGFMT(LogTemp, Log, "STOPPED ACTION {ActionName} - {WorldTime}", 
 		("ActionName", ActionName.ToString()), 
 		("WorldTime", GameTime));
 	

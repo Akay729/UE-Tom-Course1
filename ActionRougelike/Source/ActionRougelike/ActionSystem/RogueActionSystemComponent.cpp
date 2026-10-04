@@ -78,25 +78,59 @@ void URogueActionSystemComponent::StopAction(FGameplayTag InActionName)
 	UE_LOG(LogTemp, Warning, TEXT("Action %s not found"), *InActionName.ToString());
 }
 
-
-void URogueActionSystemComponent::ApplayHealthChange(float InValueChange)
+void URogueActionSystemComponent::ApplayAttributeChange(FGameplayTag AttributeTag, float Delta, EAttributeModifyType ModifyType /*=Base*/)
 {
-	/*
-	float OldHealth = RogueAttributeSet.Health ;
+	FRogueAttribute* FoundAttribute = GetAttribute(AttributeTag);
+	check(FoundAttribute);
 	
-	RogueAttributeSet.Health = FMath::Clamp(RogueAttributeSet.Health + InValueChange, 0.0f, RogueAttributeSet.MaxHealth );
+	float OldValue = FoundAttribute->GetValue();
 	
-	if (!FMath::IsNearlyEqual(OldHealth, RogueAttributeSet.Health))
+	FoundAttribute->Modifier += Delta;
+
+	switch (ModifyType)
 	{
-		OnHealthChanged.Broadcast(RogueAttributeSet.Health, OldHealth);
+	case Base:
+		FoundAttribute->Modifier += Delta;
+		break;
+		
+	case Modifier:
+		FoundAttribute->Modifier += Delta;
+		break;
+		
+	case OverrideBase:
+		FoundAttribute->Base = Delta;
+		break;
+	
+	default:
+		check(false);
 	}
-	UE_LOG(LogTemp, Log, TEXT("New Health: %f Max Health %f"), RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
-	*/
+	
+	RogueAttributeSet->PostAttributeChanged();
+	
+	UE_LOGFMT(LogTemp, Log, "Attribute {0} change:  New = {1},  Old = {2}", 
+		AttributeTag.ToString(),
+		FoundAttribute->GetValue(),
+		OldValue
+	);
+	
 }
 
-bool URogueActionSystemComponent::IsFullHealth() const
+bool URogueActionSystemComponent::IsAttributeFull(FGameplayTag AttributeTag, FGameplayTag AttributeMaxTag)
 {
-	return true;//FMath::IsNearlyEqual(RogueAttributeSet.Health, RogueAttributeSet.MaxHealth);
+	FRogueAttribute* FoundAttribute = GetAttribute(AttributeTag);
+	check(FoundAttribute);
+	
+	FRogueAttribute* FoundAttributeMax = GetAttribute(AttributeMaxTag);
+	check(FoundAttributeMax);
+	
+	UE_LOGFMT(LogTemp, Log, "Attribute {Att} value: {value}, Attribute {AttMax} value: {valueMax}",
+		("Att", AttributeTag.ToString()),
+		("AttMax", AttributeMaxTag.ToString()),
+		("value", FoundAttribute->GetValue()),
+		("valueMax", FoundAttributeMax->GetValue())
+		);
+
+	return FMath::IsNearlyEqual(FoundAttribute->GetValue(), FoundAttributeMax->GetValue());
 }
 
 FRogueAttribute* URogueActionSystemComponent::GetAttribute(FGameplayTag InAttributeTag)
