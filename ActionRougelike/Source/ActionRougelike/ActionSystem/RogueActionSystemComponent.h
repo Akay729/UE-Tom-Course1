@@ -20,10 +20,7 @@ enum EAttributeModifyType
 	Invalid
 };
 
-
-// Dynamic: per esplorlo ai blueprint
-// Multicast: per dirgli che si aspetta più listener
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, OldHealth);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnAttributeChanged, FGameplayTag /*AttributeTag*/, float /*NewAttributeValue*/, float /*OldAttributeValue*/);
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -50,14 +47,11 @@ public:
 	 *Stamina -> StaminaMax
 	 *Health -> HealthMax
 	 */ 
+	bool IsAttributeFull(FGameplayTag InAttributeTag, FGameplayTag AttributeMaxTag);
 	
-	bool IsAttributeFull(FGameplayTag AttributeTag, FGameplayTag AttributeMaxTag);
+	FOnAttributeChanged& GetAttributeListener(FGameplayTag InAttributeTag);
 	
 	FRogueAttribute* GetAttribute(FGameplayTag InAttributeTag); 
-	
-	
-	UPROPERTY(BlueprintAssignable)
-	FOnHealthChanged OnHealthChanged;
 		
 	virtual void InitializeComponent() override;
 	
@@ -74,6 +68,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category=Attributes, NoClear)
 	TSubclassOf<URogueAttributeSet> RogueAttributeSetClass;
+	
+	TMap<FGameplayTag, FOnAttributeChanged> AttributeListeners;
 	
 	UPROPERTY()
 	TArray<TObjectPtr<URogueAction>> Actions;

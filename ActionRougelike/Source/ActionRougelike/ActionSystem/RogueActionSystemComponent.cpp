@@ -4,6 +4,7 @@
 #include "RogueActionSystemComponent.h"
 #include "RogueAttributeSet.h"
 #include "RogueAction.h"
+#include "RogueGameplayTags.h"
 
 
 // Sets default values for this component's properties
@@ -85,7 +86,6 @@ void URogueActionSystemComponent::ApplayAttributeChange(FGameplayTag AttributeTa
 	
 	float OldValue = FoundAttribute->GetValue();
 	
-	FoundAttribute->Modifier += Delta;
 
 	switch (ModifyType)
 	{
@@ -106,6 +106,11 @@ void URogueActionSystemComponent::ApplayAttributeChange(FGameplayTag AttributeTa
 	}
 	
 	RogueAttributeSet->PostAttributeChanged();
+
+	if (FOnAttributeChanged* Event = AttributeListeners.Find(AttributeTag))
+	{
+		Event->Broadcast(AttributeTag, FoundAttribute->GetValue(),OldValue);
+	}
 	
 	UE_LOGFMT(LogTemp, Log, "Attribute {0} change:  New = {1},  Old = {2}", 
 		AttributeTag.ToString(),
@@ -115,22 +120,27 @@ void URogueActionSystemComponent::ApplayAttributeChange(FGameplayTag AttributeTa
 	
 }
 
-bool URogueActionSystemComponent::IsAttributeFull(FGameplayTag AttributeTag, FGameplayTag AttributeMaxTag)
+bool URogueActionSystemComponent::IsAttributeFull(FGameplayTag InAttributeTag, FGameplayTag AttributeMaxTag)
 {
-	FRogueAttribute* FoundAttribute = GetAttribute(AttributeTag);
+	FRogueAttribute* FoundAttribute = GetAttribute(InAttributeTag);
 	check(FoundAttribute);
 	
 	FRogueAttribute* FoundAttributeMax = GetAttribute(AttributeMaxTag);
 	check(FoundAttributeMax);
 	
 	UE_LOGFMT(LogTemp, Log, "Attribute {Att} value: {value}, Attribute {AttMax} value: {valueMax}",
-		("Att", AttributeTag.ToString()),
+		("Att", InAttributeTag.ToString()),
 		("AttMax", AttributeMaxTag.ToString()),
 		("value", FoundAttribute->GetValue()),
 		("valueMax", FoundAttributeMax->GetValue())
 		);
 
 	return FMath::IsNearlyEqual(FoundAttribute->GetValue(), FoundAttributeMax->GetValue());
+}
+
+FOnAttributeChanged& URogueActionSystemComponent::GetAttributeListener(FGameplayTag InAttributeTag)
+{
+	return AttributeListeners.FindOrAdd(InAttributeTag);
 }
 
 FRogueAttribute* URogueActionSystemComponent::GetAttribute(FGameplayTag InAttributeTag)

@@ -97,8 +97,9 @@ void ARoguePlayerCharacter::StopAction(FGameplayTag InActionName)
 	ActionSystemComponent->StopAction(InActionName);
 }
 
-void ARoguePlayerCharacter::OnHealthChanged(float NewHealth, float OldHealth)
+void ARoguePlayerCharacter::OnHealthChanged(FGameplayTag AttributeTag, float NewHealth, float OldHealth)
 {
+	
 	if(FMath::IsNearlyZero(NewHealth) || NewHealth <= 0.0f)
 	{
 		DisableInput(nullptr);
@@ -121,5 +122,5 @@ void ARoguePlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
-	ActionSystemComponent->OnHealthChanged.AddDynamic(this, &ARoguePlayerCharacter::OnHealthChanged);
+	ActionSystemComponent->GetAttributeListener(RogueGameplayTags::Attribute_Health).AddUObject(this, &ThisClass::OnHealthChanged);
 }
