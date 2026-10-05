@@ -7,14 +7,16 @@
 #include "RogueAttributeSet.generated.h"
 
 
+class URogueActionSystemComponent;
+
 USTRUCT()
 struct FRogueAttribute
 {
 	GENERATED_BODY()
 	
-	FRogueAttribute(){};
+	FRogueAttribute(){}
 	
-	FRogueAttribute(float InBase): Base(InBase){};
+	FRogueAttribute(float InBase): Base(InBase){}
 	
 	UPROPERTY(EditAnywhere)
 	float Base = 0.0f;
@@ -38,6 +40,11 @@ class ACTIONROUGELIKE_API URogueAttributeSet : public UObject
 	GENERATED_BODY()
 	
 public:
+	
+	URogueActionSystemComponent* GetOwningComponent() const;
+	
+	virtual void InitializeAttributes() {};
+	
 	virtual void PostAttributeChanged() {};
 	
 };
@@ -59,4 +66,47 @@ public:
 	virtual void PostAttributeChanged() override;
 	
 	URogueHealthAttributeSet();
+};
+
+UCLASS()
+class URoguePawnAttributeSet : public URogueHealthAttributeSet
+{
+	GENERATED_BODY()
+
+public:
+	
+	virtual void InitializeAttributes() override;
+	
+	virtual void PostAttributeChanged() override;
+	
+	void ApplyMoveSpeed();
+	
+	
+	/*
+	 * Walking Speed on linked on CharacterMovementComponent
+	 */
+	UPROPERTY(EditAnywhere, Category=Attribute)
+	FRogueAttribute MovementSpeed;
+	
+	URoguePawnAttributeSet();
+};
+
+
+UCLASS()
+class URoguePlayerAttributeSet : public URoguePawnAttributeSet
+{
+	GENERATED_BODY()
+
+public:
+};
+
+
+UCLASS()
+class URogueMonsterAttributeSet : public URoguePawnAttributeSet
+{
+	GENERATED_BODY()
+
+public:
+	
+	URogueMonsterAttributeSet();
 };
