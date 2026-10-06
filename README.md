@@ -23,8 +23,8 @@ Riprendere le basi di Unreal Engine C++ e costruire gradualmente un action/rouge
 - [x] 12. Assignment 4 
 - [x] 13. Action System (GAS-like)
 - [x] 14. GameplayTags 
-- [ ] 15. Attributes**in corso**
-- [ ] 16. Assignment 5
+- [x] 15. Attributes
+- [ ] 16. Assignment 5**in corso**
 - [ ] 17. Debugging & Polish
 - [ ] 18. Data-Oriented Design
 - [ ] 19. Buffs & Debuffs
