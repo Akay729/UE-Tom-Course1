@@ -44,7 +44,7 @@ void URoguePawnAttributeSet::PostAttributeChanged()
 void URoguePawnAttributeSet::ApplyMoveSpeed()
 {
 	ACharacter* Character = Cast<ACharacter>(GetOwningComponent()->GetOwner());
-	Character->GetCharacterMovement()->MaxAcceleration = MovementSpeed.GetValue();
+	Character->GetCharacterMovement()->MaxWalkSpeed = MovementSpeed.GetValue();
 }
 
 
