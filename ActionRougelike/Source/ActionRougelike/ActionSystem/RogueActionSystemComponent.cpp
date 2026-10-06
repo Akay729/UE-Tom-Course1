@@ -2,9 +2,13 @@
 
 
 #include "RogueActionSystemComponent.h"
+
+#include "NiagaraShared.h"
 #include "RogueAttributeSet.h"
 #include "RogueAction.h"
 #include "RogueGameplayTags.h"
+#include "DSP/BufferDiagnostics.h"
+#include "Trace/Detail/Transport.h"
 
 
 // Sets default values for this component's properties
@@ -120,9 +124,15 @@ void URogueActionSystemComponent::ApplayAttributeChange(FGameplayTag AttributeTa
 
 	if (TArray<FOnAttributeDynamicChanged>* Events = AttributeDynamicListeners.Find(AttributeTag))
 	{
-		for (FOnAttributeDynamicChanged& Event : *Events)
+		for (int i = Events->Num() - 1; i >= 0; --i)
 		{
-			Event.Execute(AttributeTag, FoundAttribute->GetValue(), OldValue);
+			FOnAttributeDynamicChanged& Event = (*Events)[i];
+			bool bIsBound = Event.ExecuteIfBound(AttributeTag, FoundAttribute->GetValue(), OldValue);
+			if (!bIsBound)
+			{
+				Events->RemoveAt(i);
+				UE_LOG(LogTemp, Warning, TEXT("Cleaned up expired attribute delegate for %s"), *GetNameSafe(GetOwner()));
+			}
 		}
 	}
 
@@ -162,6 +172,18 @@ void URogueActionSystemComponent::AddDynamicAttributeListener(FOnAttributeDynami
 {
 	TArray<FOnAttributeDynamicChanged>& Events = AttributeDynamicListeners.FindOrAdd(AttributeTag);
 	Events.Add(Event);
+}
+
+void URogueActionSystemComponent::RemoveDynamicAttributeListener(FOnAttributeDynamicChanged Event)
+{
+	for (TPair<FGameplayTag, TArray<FOnAttributeDynamicChanged>>& Listener : AttributeDynamicListeners)
+	{
+		if (Listener.Value.RemoveSingle(Event)>0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Removed BP Binding!"));
+			break;
+		}
+	}
 }
 
 FRogueAttribute* URogueActionSystemComponent::GetAttribute(FGameplayTag InAttributeTag) const

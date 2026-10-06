@@ -61,7 +61,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, DisplayName="Add Attribute Listener", meta = (Keywords="events,delegate"))
 	void AddDynamicAttributeListener(FOnAttributeDynamicChanged Event, FGameplayTag AttributeTag);
-		
+	
+	UFUNCTION(BlueprintCallable)
+	void RemoveDynamicAttributeListener(FOnAttributeDynamicChanged Event);
+	
 	virtual void InitializeComponent() override;
 	
 	FGameplayTagContainer ActiveGameplayTags;

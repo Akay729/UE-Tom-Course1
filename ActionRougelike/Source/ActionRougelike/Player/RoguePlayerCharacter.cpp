@@ -100,7 +100,7 @@ void ARoguePlayerCharacter::StopAction(FGameplayTag InActionName)
 void ARoguePlayerCharacter::OnHealthChanged(FGameplayTag AttributeTag, float NewHealth, float OldHealth)
 {
 	
-	if(FMath::IsNearlyZero(NewHealth) || NewHealth <= 0.0f)
+	if(FMath::IsNearlyZero(NewHealth))
 	{
 		DisableInput(nullptr);
 		GetMovementComponent()->StopMovementImmediately();
